@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 跨我身體 OVER MY BODY
 
-## Getting Started
+A Taiwan-based experimental music label website built with Next.js, preserving the original design and layout patterns.
 
-First, run the development server:
+## Stack
 
+- **Next.js 15** with App Router
+- **TypeScript** for type safety
+- **React Server Components** for optimal performance
+- **Custom CSS** (preserved from original design)
+
+## Features
+
+- **Fixed Corner Layout**: Four persistent UI elements that remain fixed across all routes
+- **Route-based Content**: Real Next.js routes replace hash-based navigation
+- **Responsive Design**: Mobile-optimized layout with adaptive corner positioning
+- **SEO Optimized**: Server-side rendering with proper metadata
+- **Vercel Ready**: Optimized for deployment on Vercel platform
+
+## Routes
+
+- `/` - Homepage with main visual background
+- `/releases` - Music catalog with Bandcamp integration
+- `/store` - Physical releases and merchandise
+- `/info` - Contact and submission information
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+
+### Getting Started
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/你的帳號/over-my-body-website.git
+cd over-my-body-website
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+### Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment on Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Quick Deploy
 
-## Deploy on Vercel
+1. Push your code to GitHub
+2. Import the repository in Vercel dashboard
+3. Vercel will automatically detect Next.js and deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Manual Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No special build settings required. Vercel will automatically:
+- Detect Next.js framework
+- Use `npm run build` as build command
+- Set output directory to `.next`
+- Enable HTTPS and custom domains
+
+### Environment Variables
+
+Currently no environment variables are required for basic functionality.
+
+## Architecture Notes
+
+### Design Preservation
+
+The migration preserves the original design by:
+- Maintaining exact CSS class names and selectors
+- Preserving the four-corner fixed layout structure  
+- Keeping original asset paths under `/public/asset`
+- Converting hash-based routing to real Next.js routes without visual changes
+
+### CSS Architecture
+
+- `src/app/globals.css` - Consolidated CSS from original `/css` directory
+- No CSS-in-JS or Tailwind - uses original custom CSS
+- Responsive breakpoints preserved from original design
+- CSS variables for design tokens maintained
+
+### Component Structure
+
+- `src/app/layout.tsx` - Root layout with four fixed corners
+- `src/components/Navigation.tsx` - Client component for navigation state
+- `src/components/BodyClassManager.tsx` - Manages route-specific body classes
+- Route pages in `src/app/*/page.tsx` - Server components for each route
+
+## Future Enhancements
+
+Stub files are included for future features:
+
+- `src/lib/bandcamp.ts` - Bandcamp API integration for dynamic releases
+- `src/lib/cms.ts` - CMS integration for store products
+- `src/app/api/revalidate/route.ts` - On-demand revalidation for external content
+
+## License
+
+All rights reserved - OVER MY BODY collective.

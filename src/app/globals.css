@@ -1,26 +1,519 @@
-@import "tailwindcss";
+/* =============================================================================
+   OVER MY BODY - Global Styles
+   Consolidated from original /css directory for Next.js migration
+   ============================================================================= */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Minimal reset */
+*,*::before,*::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; color: #EBEBEB; background: #1A1A1A; font-family: "Neue Haas Grotesk Text Pro", Inter, system-ui, -apple-system, "PingFang TC","Noto Sans TC", sans-serif; line-height: 1.5; }
+img, video { max-width: 100%; display: block; }
+
+/* Design tokens from Figma */
+:root{
+  --container-max: 1200px;
+  --space-8: .5rem; --space-12: .75rem; --space-16: 1rem;
+  --space-24: 1.5rem; --space-32: 2rem; --space-48: 3rem; --space-64: 4rem;
+
+  --fs-14: 0.875rem; --fs-16: 1rem; --fs-20: 1.25rem; --fs-24: 1.5rem; --fs-32: 2rem; --fs-48: 3rem;
+
+  /* Figma exact positioning */
+  --tl-x: 22px; --tl-y: 25px;
+  --tr-x: 20px; --tr-y: 20px;
+  --bl-x: 20px; --bl-y: 20px;
+  --br-x: 20px; --br-y: 20px;
+
+  --corner-z: 20;
+  --accent: #FFFFFF;
+  
+  /* Corner opacity controls */
+  --corner-opacity: 0.6;
+  /*
+  --corner-tl-opacity: 1.0;
+  --corner-tr-opacity: 1.0;
+  --corner-bl-opacity: 1.0;
+  --corner-br-opacity: 0.8;
+  */
+
+  
+  /* Figma colors */
+  --primary-bg: #1A1A1A;
+  --text-primary: #EBEBEB;
+  --text-white: #FFFFFF;
+  --text-secondary: rgba(255,255,255,0.8);
+  --border-light: rgba(232, 232, 232, 0.8);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Utilities */
+.container { width: min(100% - 2rem, var(--container-max)); margin-inline: auto; }
+.lead { color: #cfcfcf; font-size: var(--fs-20); }
+
+/* Background hooks per route */
+body.bg-home    { background: var(--primary-bg); }
+body.bg-release { background: var(--primary-bg); }
+body.bg-store   { background: var(--primary-bg); }
+body.bg-info    { background: var(--primary-bg); }
+
+/* =============================================================================
+   STYLES.CSS - Main visual and corner components
+   ============================================================================= */
+
+/* Main visual background - Homepage only (47:200) */
+.main-visual {
+  position: fixed;
+  width: 1543px;
+  height: 1543px;
+  z-index: 1;
+  left: calc(50% - 1543px/2);
+  top: calc(50% - 1543px/2);
+  pointer-events: none;
+  scale: 1.3;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.main-visual-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hide main visual on non-home pages */
+body:not(.bg-home) .main-visual {
+  display: none;
+}
+
+/* Corner positioning - exact Figma coordinates */
+.corner {
+  position: fixed;
+  z-index: var(--corner-z);
+  background: transparent;
+  border: none;
+  padding: 0;
+  opacity: var(--corner-opacity); /* 使用 CSS 變數控制不透明度 */
+  transform: scale(0.8); /* 縮小所有角落元素到 0.8 倍 */
+  transform-origin: var(--transform-origin, center); /* 縮放原點，每個角落可以個別設定 */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* 平滑過渡效果 */
+}
+
+/* Top-Left (55:50) - 98x59px at (22,25) */
+.corner--tl {
+  top: calc(env(safe-area-inset-top) + var(--tl-y));
+  left: calc(env(safe-area-inset-left) + var(--tl-x));
+  width: 98px;
+  height: 59px;
+  transform-origin: top left; /* 從左上角縮放 */
+}
+
+/* Top-Right (55:49) - 351x106px at (1069,20) */
+.corner--tr {
+  top: calc(env(safe-area-inset-top) + var(--tr-y));
+  right: calc(env(safe-area-inset-right) + var(--tr-x));
+  width: 351px;
+  height: 106px;
+  transform-origin: top right; /* 從右上角縮放 */
+}
+
+/* Bottom-Left (55:48) - 440x50px at (20,954) */
+.corner--bl {
+  bottom: calc(env(safe-area-inset-bottom) + var(--bl-y));
+  left: calc(env(safe-area-inset-left) + var(--bl-x));
+  width: 440px;
+  height: 50px;
+  transform-origin: bottom left; /* 從左下角縮放 */
+}
+
+/* Bottom-Right (55:47) - 473x42px at (947,962) */
+.corner--br {
+  bottom: calc(env(safe-area-inset-bottom) + var(--br-y));
+  right: calc(env(safe-area-inset-right) + var(--br-x));
+  width: 473px;
+  height: 42px;
+  transform-origin: bottom right; /* 從右下角縮放 */
+}
+
+/* Top-Left Component */
+.logo-link {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateZ(0); /* Hardware acceleration */
+}
+
+.logo-link:hover {
+  opacity: 0.9;
+  transform: translateY(-1px) scale(1.02) translateZ(0);
+  filter: brightness(1.05) drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1));
+}
+
+.logo-graphic {
+  width: 98px;
+  height: 59px;
+  display: block;
+}
+
+/* Top-Right Component */
+.top-right {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 351px;
+  height: 106px;
+}
+
+.chinese-title {
+  width: 351px;
+  height: 82px;
+  fill: var(--text-primary);
+}
+
+.english-subtitle {
+  width: 351px;
+  height: 21px;
+  fill: var(--text-primary);
+}
+
+/* Bottom-Left Component - Navigation */
+.corner-nav {
+  width: 440px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 2.5px solid var(--border-light);
+  padding: 0 22px;
+  gap: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transform: translateZ(0); /* Hardware acceleration */
+}
+
+.corner-nav:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+.corner-nav a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-family: "Neue Haas Grotesk Text Pro", sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.223em;
+  letter-spacing: 3%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateZ(0); /* Hardware acceleration for smooth transitions */
+}
+
+/* Navigation spacing according to Figma layout */
+.corner-nav a:nth-child(1) { /* HOME - x:22 */
+  margin-left: 0;
+  margin-right: 18px; /* 117-22-77 = 18 */
+}
+
+.corner-nav a:nth-child(2) { /* RELEASE - x:117 */
+  margin-right: 18px; /* 252-117-117 = 18 */
+}
+
+.corner-nav a:nth-child(3) { /* STORE - x:252 */
+  margin-right: 18px; /* 356-252-86 = 18 */
+}
+
+.corner-nav a:nth-child(4) { /* INFO - x:356 */
+  margin-right: 0;
+}
+
+/* Minimalist hover and focus effects */
+.corner-nav a:hover,
+.corner-nav a:focus-visible {
+  color: var(--accent);
+  transform: translateY(-1px) translateZ(0);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+  filter: brightness(1.1);
+  outline: none;
+}
+
+/* Touch device hover enhancement */
+@media (hover: hover) and (pointer: fine) {
+  .corner-nav a:hover {
+    letter-spacing: 0.05em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Active page styling */
+.corner-nav a[aria-current="page"] {
+  color: var(--accent);
+}
+
+/* Bottom-Right Component */
+.bottom-right {
+  width: 473px;
+  height: 42px;
+  display: flex;
+  align-items: stretch;
+  padding: 5px 0 2px 338px;
+  opacity: 0.8;
+}
+
+.meta-text {
+  font-family: "Neue Haas Grotesk Text Pro", sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 0.95em;
+  letter-spacing: 3%;
+  color: var(--text-white);
+  position: absolute;
+  width: 459px;
+  height: 42px;
+  left: 0;
+  top: 0;
+}
+
+.bottom-icons {
+  width: 135px;
+  height: 35px;
+  flex: 1;
+}
+
+/* Center content area */
+.content {
+  position: relative;
+  z-index: 10;
+  padding: calc(var(--tl-y) + 59px + 20px)
+           calc(var(--tr-x) + 20px)
+           calc(var(--bl-y) + 50px + 20px)
+           calc(var(--bl-x) + 20px);
+  min-height: 100dvh;
+  display: block;
+}
+
+.panel {
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  :root {
+    --tl-x: 15px; --tl-y: 20px;
+    --tr-x: 15px; --tr-y: 15px;
+    --bl-x: 15px; --bl-y: 15px;
+    --br-x: 15px; --br-y: 15px;
+  }
+
+  /* 在小螢幕上可以調整縮放比例 */
+  .corner {
+    transform: scale(0.7); /* 在行動裝置上進一步縮小 */
+  }
+
+  .corner--tl {
+    width: 80px;
+    height: 48px;
+  }
+
+  .corner--tr {
+    width: 280px;
+    height: 85px;
+  }
+
+  .corner--bl {
+    width: auto;
+    height: auto;
+  }
+
+  /* Hide entire bottom-right corner on mobile */
+  .corner--br {
+    display: none !important;
+  }
+
+  .logo-graphic {
+    width: 80px;
+    height: 48px;
+  }
+
+  .top-right {
+    width: 280px;
+    height: 85px;
+  }
+
+  .chinese-title {
+    width: 280px;
+    height: 65px;
+  }
+
+  .english-subtitle {
+    width: 280px;
+    height: 17px;
+  }
+
+  .corner-nav {
+    width: auto;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .corner-nav a {
+    font-size: 18px;
+    margin: 0 8px 0 0;
+  }
+
+
+
+  .main-visual {
+    top: -130px;
+    left: -26px;
+    width: 771px;
+    height: 771px;
+  }
+
+  /* Mobile-friendly content area */
+  .content {
+    padding: calc(var(--tl-y) + 48px + 15px)
+             15px
+             calc(var(--bl-y) + 60px + 15px)
+             15px;
+    display: block;
+  }
+
+  .panel {
+    padding: 1rem;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .panel h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .panel .lead {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Responsive release grid */
+  .release-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .release-info h3 {
+    font-size: 0.8rem;
+  }
+
+  .release-info p {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+  .release-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .content {
+    padding: calc(var(--tl-y) + 48px + 10px)
+             10px
+             calc(var(--bl-y) + 60px + 10px)
+             10px;
+  }
+  
+  .panel {
+    padding: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .panel h1 {
+    font-size: 1.75rem;
+  }
+  
+  .panel .lead {
+    font-size: 1rem;
+  }
+}
+
+/* Release Grid - Less-is-more design */
+.release-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.release-item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.release-item:hover {
+  transform: translateY(-4px);
+  opacity: 0.8;
+}
+
+.release-art {
+  aspect-ratio: 1;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  background: rgba(255,255,255,0.05);
+}
+
+.release-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.release-item:hover .release-art img {
+  transform: scale(1.02);
+}
+
+.release-info {
+  text-align: left;
+}
+
+.release-info h3 {
+  color: var(--text-white);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+
+.release-info p {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 300;
+  margin: 0;
+  opacity: 0.8;
 }
