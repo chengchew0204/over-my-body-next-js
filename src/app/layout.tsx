@@ -3,6 +3,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import BodyClassManager from "@/components/BodyClassManager";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "跨我身體 OVER MY BODY",
@@ -28,7 +29,7 @@ export default function RootLayout({
         <div className="corner corner--tl">
           <div className="corner-block top-left">
             <Link href="/" className="logo-link">
-              <img src="/asset/top-left-logo.svg" alt="Logo" className="logo-graphic" />
+              <Image src="/asset/top-left-logo.svg" alt="Logo" className="logo-graphic" width={120} height={40} priority />
             </Link>
           </div>
         </div>
@@ -36,8 +37,8 @@ export default function RootLayout({
         {/* Top-Right Corner - Title */}
         <div className="corner corner--tr">
           <div className="corner-block top-right">
-            <img src="/asset/chinese-title.svg" alt="跨我身體" className="chinese-title" />
-            <img src="/asset/english-subtitle.svg" alt="OVER MY BODY" className="english-subtitle" />
+            <Image src="/asset/chinese-title.svg" alt="跨我身體" className="chinese-title" width={200} height={60} priority />
+            <Image src="/asset/english-subtitle.svg" alt="OVER MY BODY" className="english-subtitle" width={150} height={20} priority />
           </div>
         </div>
 
@@ -52,13 +53,13 @@ export default function RootLayout({
         <div className="corner corner--br">
           <div className="corner-block bottom-right">
             <div className="meta-text">Taiwan-based label<br/>focusing on avant-garde sounds.</div>
-            <img src="/asset/bottom-right-icons.svg" alt="Icons" className="bottom-icons" />
+            <Image src="/asset/bottom-right-icons.svg" alt="Icons" className="bottom-icons" width={80} height={40} />
           </div>
         </div>
 
         {/* Main visual background */}
         <div className="main-visual">
-          <img src="/asset/homepage-bg-56586a.png" alt="Main Visual" className="main-visual-image" />
+          <Image src="/asset/homepage-bg-56586a.png" alt="Main Visual" className="main-visual-image" width={1920} height={1080} priority fill sizes="100vw" style={{objectFit: 'cover'}} />
         </div>
 
         {/* Center content outlet */}
