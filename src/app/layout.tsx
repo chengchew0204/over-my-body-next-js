@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import BodyClassManager from "@/components/BodyClassManager";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "跨我身體 OVER MY BODY",
@@ -26,9 +27,9 @@ export default function RootLayout({
         {/* Top-Left Corner - Logo */}
         <div className="corner corner--tl">
           <div className="corner-block top-left">
-            <a href="/" className="logo-link">
+            <Link href="/" className="logo-link">
               <img src="/asset/top-left-logo.svg" alt="Logo" className="logo-graphic" />
-            </a>
+            </Link>
           </div>
         </div>
 

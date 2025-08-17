@@ -35,7 +35,7 @@ A Taiwan-based experimental music label website built with Next.js, preserving t
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/你的帳號/over-my-body-website.git
+git clone https://github.com/chengchew0204/over-my-body-website.git
 cd over-my-body-website
 ```
 
