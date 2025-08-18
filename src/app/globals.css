@@ -1122,6 +1122,24 @@ body:not(.bg-home) .main-visual {
   }
 }
 
+/* Mobile-specific animation to prevent jumping */
+@media (max-width: 768px) {
+  @keyframes fadeInCenter {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+  
+  .cart-tooltip {
+    animation: fadeInCenter 0.2s ease !important;
+  }
+}
+
 .cart-tooltip-header {
   color: var(--text-white);
   font-size: 14px;
@@ -1459,6 +1477,48 @@ body:not(.bg-home) .main-visual {
   background: rgba(255, 255, 255, 0.9);
 }
 
+/* Desktop version - keep original tooltip positioning */
+@media (min-width: 769px) {
+  .cart-tooltip {
+    position: absolute !important;
+    bottom: 45px !important;
+    right: -10px !important;
+    left: auto !important;
+    transform: none !important;
+    z-index: 50;
+    box-shadow: none !important;
+  }
+  
+  .cart-tooltip::before,
+  .cart-tooltip::after {
+    display: block !important;
+  }
+  
+  .cart-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 15px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid var(--primary-bg);
+  }
+  
+  .cart-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 14px;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
 /* Mobile responsive for cart */
 @media (max-width: 768px) {
   .cart-drawer {
@@ -1484,25 +1544,22 @@ body:not(.bg-home) .main-visual {
   }
   
   .cart-tooltip {
+    /* Keep original height relative to cart ball, center horizontally on screen */
+    position: fixed !important;
+    bottom: calc(20px + 36px + 45px) !important; /* cart-ball-container bottom + ball height + original offset */
+    left: 50vw !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
     min-width: 280px;
-    max-width: calc(100vw - 40px); /* Prevent overflow */
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%); /* Center horizontally */
+    max-width: calc(100vw - 40px);
     width: max-content;
-    max-width: calc(100vw - 40px); /* Ensure it doesn't exceed screen width */
+    z-index: 1000; /* Ensure it's above other content */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
   }
   
-  .cart-tooltip::before {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-  }
-  
+  .cart-tooltip::before,
   .cart-tooltip::after {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    display: none; /* Hide arrows on mobile since tooltip is centered */
   }
   
   .quantity-popup {
@@ -1517,6 +1574,7 @@ body:not(.bg-home) .main-visual {
     min-width: 260px;
     max-width: calc(100vw - 20px); /* Even smaller margins for very small screens */
     padding: 12px; /* Reduce padding slightly */
+    bottom: calc(16px + 36px + 45px) !important; /* Adjust for smaller cart-ball-container bottom position */
   }
   
   .cart-ball-container {

@@ -41,6 +41,7 @@ export default function CartBall() {
     // Disable hover on touch devices
     if (isTouchDevice) return;
     
+    // Clear any existing timeout
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
@@ -52,10 +53,10 @@ export default function CartBall() {
     // Disable hover on touch devices
     if (isTouchDevice) return;
     
-    // Use a longer delay to prevent accidental closing
+    // Add 200ms delay to allow moving mouse to tooltip
     hoverTimeoutRef.current = setTimeout(() => {
       setIsHovered(false);
-    }, 500); // 500ms delay for better user experience
+    }, 200);
   };
 
   // Detect touch device and cleanup timeout on unmount
@@ -67,6 +68,7 @@ export default function CartBall() {
     
     checkTouchDevice();
     
+    // Cleanup timeout on unmount
     return () => {
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
