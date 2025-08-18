@@ -321,7 +321,7 @@ body:not(.bg-home) .main-visual {
   .corner--tr {
     width: 351px; /* 保持原始尺寸，透過transform縮放 */
     height: 106px;
-    transform: scale(0.75); /* 右上角特別設定為0.75縮放 */
+    transform: scale(0.6); /* 右上角縮小到0.6縮放，讓行動裝置上更適合 */
     transform-origin: top right; /* 確保從右上角縮放 */
   }
 
