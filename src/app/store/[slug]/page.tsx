@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchAllSlugs, fetchProductBySlug } from "@/lib/cms";
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 // Pre-generate static params; good for ISR + SEO
 export async function generateStaticParams() {
@@ -12,7 +12,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const product = await fetchProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await fetchProductBySlug(slug);
   if (!product) return {};
   return {
     title: `${product.title} | Store | OVER MY BODY`,
@@ -28,7 +29,8 @@ export async function generateMetadata({ params }: Props) {
 export const revalidate = 60;
 
 export default async function ProductPage({ params }: Props) {
-  const product = await fetchProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await fetchProductBySlug(slug);
   if (!product) notFound();
 
   const images = product.images?.length ? product.images : [product.coverImage];
