@@ -109,7 +109,6 @@ body:not(.bg-home) .main-visual {
   right: calc(env(safe-area-inset-right) + var(--tr-x));
   width: 351px;
   height: 106px;
-  transform: scale(0.75);
   transform-origin: top right; /* 從右上角縮放 */
 }
 
@@ -320,9 +319,9 @@ body:not(.bg-home) .main-visual {
   }
 
   .corner--tr {
-    width: 280px;
-    height: 85px;
-    transform: scale(0.75);
+    width: 351px; /* 保持原始尺寸，透過transform縮放 */
+    height: 106px;
+    transform: scale(0.75); /* 右上角特別設定為0.75縮放 */
     transform-origin: top right; /* 確保從右上角縮放 */
   }
 
@@ -342,18 +341,18 @@ body:not(.bg-home) .main-visual {
   }
 
   .top-right {
-    width: 280px;
-    height: 85px;
+    width: 351px; /* 保持原始尺寸，透過父容器的transform縮放 */
+    height: 106px;
   }
 
   .chinese-title {
-    width: 280px;
-    height: 65px;
+    width: 351px; /* 保持原始尺寸，透過父容器的transform縮放 */
+    height: 82px;
   }
 
   .english-subtitle {
-    width: 280px;
-    height: 17px;
+    width: 351px; /* 保持原始尺寸，透過父容器的transform縮放 */
+    height: 21px;
   }
 
   .corner-nav {
