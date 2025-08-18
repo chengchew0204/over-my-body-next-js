@@ -46,7 +46,8 @@ export async function generateStaticParams() {
 
 export const revalidate = 60;
 
-export default async function ReleaseDetail({ params: { slug } }: { params: { slug: string } }) {
+export default async function ReleaseDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [release, tracks] = await Promise.all([
     sanity.fetch<Release | null>(RELEASE, { slug }, { next: { tags: ['releases'] } }),
     sanity.fetch<Track[]>(TRACKS, { slug }, { next: { tags: ['tracks'] } }),
