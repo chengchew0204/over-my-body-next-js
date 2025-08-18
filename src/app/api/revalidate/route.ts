@@ -7,7 +7,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, message: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await req.json().catch(() => ({} as any));
+  const body = await req.json().catch(() => ({})) as {
+    transition?: { to?: { _type?: string } };
+    _type?: string;
+    type?: string;
+  };
   const docType = body?.transition?.to?._type || body?._type || body?.type;
 
   if (docType === 'release') revalidateTag('releases');

@@ -4,6 +4,18 @@ import { sanity } from '@/lib/sanity';
 import { groq } from 'next-sanity';
 import { getSanityImageUrl } from '@/lib/image-utils';
 
+type Release = {
+  _id: string;
+  name: string;
+  slug: string;
+  artist: string;
+  bandcampUrl?: string;
+  coverUrl?: string;
+  externalId?: string;
+  releaseDate?: string;
+  type?: string;
+};
+
 export const metadata: Metadata = {
   title: '跨我身體 OVER MY BODY - Releases',
   description: 'Discover our catalog of avant-garde sounds and experimental compositions from emerging and established artists.',
@@ -21,7 +33,7 @@ export const revalidate = 60;
  * Data sourced from Sanity CMS
  */
 export default async function ReleasesPage() {
-  const releases = await sanity.fetch(RELEASES, {}, { next: { tags: ['releases'] } });
+  const releases = await sanity.fetch<Release[]>(RELEASES, {}, { next: { tags: ['releases'] } });
 
   return (
     <>
@@ -29,7 +41,7 @@ export default async function ReleasesPage() {
       <p className="lead">Discover our catalog of avant-garde sounds and experimental compositions from emerging and established artists.</p>
 
       <div className="release-grid">
-        {releases?.map((release: any) => {
+        {releases?.map((release: Release) => {
           const bandcampUrl = release.bandcampUrl || `https://overmybody.bandcamp.com/album/${release.slug}`;
           
           return (

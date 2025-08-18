@@ -18,6 +18,29 @@ export type Product = {
   tags?: string[];
 };
 
+type SanityProduct = {
+  _id: string;
+  title: string;
+  slug: string;
+  price?: number;
+  currency?: string;
+  sku?: string;
+  stock?: number;
+  status?: string;
+  buyUrl?: string;
+  externalProductId?: string;
+  lzsProductId?: string;
+  productType?: string;
+  descriptionHtml?: string;
+  coverUrl?: string;
+  gallery?: Array<{ url: string; _key: string }>;
+  tags?: string[];
+};
+
+type SanitySlug = {
+  slug: string;
+};
+
 const PRODUCTS_QUERY = groq`*[_type=="product" && status=="published"]|order(_createdAt desc){
   _id, title, "slug": slug.current, price, currency, sku, stock,
   "coverUrl": coverImage.asset->url,
@@ -37,14 +60,14 @@ const PRODUCT_BY_SLUG_QUERY = groq`*[_type=="product" && slug.current==$slug][0]
 const ALL_PRODUCT_SLUGS_QUERY = groq`*[_type=="product" && defined(slug.current)]{ "slug": slug.current }`;
 
 export async function fetchProducts(): Promise<Product[]> {
-  const products = await sanity.fetch(PRODUCTS_QUERY, {}, { next: { tags: ['products'] } });
+  const products = await sanity.fetch<SanityProduct[]>(PRODUCTS_QUERY, {}, { next: { tags: ['products'] } });
   
-  return products?.map((p: any) => ({
+  return products?.map((p: SanityProduct) => ({
     id: p._id,
     slug: p.slug,
     title: p.title,
-    coverImage: getSanityImageUrl(p.coverUrl, 'medium', 95),
-    images: p.gallery?.map((img: any) => getSanityImageUrl(img.url, 'large', 95)).filter(Boolean) || [],
+    coverImage: p.coverUrl ? getSanityImageUrl(p.coverUrl, 'medium', 95) : '',
+    images: p.gallery?.map((img) => getSanityImageUrl(img.url, 'large', 95)).filter(Boolean) || [],
     priceText: p.price ? `$${p.price.toFixed(2)} ${p.currency || 'USD'}` : '',
     buyUrl: p.buyUrl,
     description: p.descriptionHtml,
@@ -53,7 +76,7 @@ export async function fetchProducts(): Promise<Product[]> {
 }
 
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
-  const p = await sanity.fetch(PRODUCT_BY_SLUG_QUERY, { slug }, { next: { tags: ['products'] } });
+  const p = await sanity.fetch<SanityProduct | null>(PRODUCT_BY_SLUG_QUERY, { slug }, { next: { tags: ['products'] } });
   
   if (!p) return null;
   
@@ -61,8 +84,8 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
     id: p._id,
     slug: p.slug,
     title: p.title,
-    coverImage: getSanityImageUrl(p.coverUrl, 'medium', 95),
-    images: p.gallery?.map((img: any) => getSanityImageUrl(img.url, 'large', 95)).filter(Boolean) || [],
+    coverImage: p.coverUrl ? getSanityImageUrl(p.coverUrl, 'medium', 95) : '',
+    images: p.gallery?.map((img) => getSanityImageUrl(img.url, 'large', 95)).filter(Boolean) || [],
     priceText: p.price ? `$${p.price.toFixed(2)} ${p.currency || 'USD'}` : '',
     buyUrl: p.buyUrl,
     description: p.descriptionHtml,
@@ -71,6 +94,6 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
 }
 
 export async function fetchAllSlugs(): Promise<string[]> {
-  const slugs = await sanity.fetch(ALL_PRODUCT_SLUGS_QUERY);
-  return slugs?.filter(Boolean).map((s: any) => s.slug) || [];
+  const slugs = await sanity.fetch<SanitySlug[]>(ALL_PRODUCT_SLUGS_QUERY);
+  return slugs?.filter(Boolean).map((s) => s.slug) || [];
 }

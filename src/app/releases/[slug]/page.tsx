@@ -3,6 +3,33 @@ import { groq } from 'next-sanity';
 import Image from 'next/image';
 import { getSanityImageUrl } from '@/lib/image-utils';
 
+type Release = {
+  _id: string;
+  name: string;
+  slug: string;
+  artist: string;
+  bandcampUrl?: string;
+  cover?: object;
+  coverUrl?: string;
+  externalId?: string;
+  releaseDate?: string;
+  type?: string;
+  aboutHtml?: string;
+};
+
+type Track = {
+  _id: string;
+  name: string;
+  durationSec?: number;
+  externalTrackId?: string;
+  streamUrl?: string;
+  trackNumber?: number;
+};
+
+type SlugParams = {
+  slug: string;
+};
+
 const RELEASE = groq`*[_type=="release" && slug.current==$slug][0]{
   _id, name, "slug": slug.current, artist, bandcampUrl,
   cover, "coverUrl": cover.asset->url, externalId, releaseDate, type, aboutHtml
@@ -13,16 +40,16 @@ const TRACKS = groq`*[_type=="track" && album->slug.current==$slug]|order(trackN
 }`;
 
 export async function generateStaticParams() {
-  const slugs = await sanity.fetch(groq`*[_type=="release"]{ "slug": slug.current }`);
-  return slugs?.filter(Boolean).map((s: any) => ({ slug: s.slug })) || [];
+  const slugs = await sanity.fetch<SlugParams[]>(groq`*[_type=="release"]{ "slug": slug.current }`);
+  return slugs?.filter(Boolean).map((s) => ({ slug: s.slug })) || [];
 }
 
 export const revalidate = 60;
 
 export default async function ReleaseDetail({ params: { slug } }: { params: { slug: string } }) {
   const [release, tracks] = await Promise.all([
-    sanity.fetch(RELEASE, { slug }, { next: { tags: ['releases'] } }),
-    sanity.fetch(TRACKS, { slug }, { next: { tags: ['tracks'] } }),
+    sanity.fetch<Release | null>(RELEASE, { slug }, { next: { tags: ['releases'] } }),
+    sanity.fetch<Track[]>(TRACKS, { slug }, { next: { tags: ['tracks'] } }),
   ]);
 
   if (!release) return null;
@@ -52,7 +79,7 @@ export default async function ReleaseDetail({ params: { slug } }: { params: { sl
       <section>
         <h2>Tracks</h2>
         <ol>
-          {tracks?.map((t: any) => (
+          {tracks?.map((t: Track) => (
             <li key={t._id}>
               {t.trackNumber ? `${t.trackNumber}. ` : ''}{t.name}
               {t.durationSec ? ` — ${Math.floor(t.durationSec / 60)}:${String(t.durationSec % 60).padStart(2, '0')}` : ''}
