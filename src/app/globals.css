@@ -581,3 +581,51 @@ body:not(.bg-home) .main-visual {
   margin: 0;
   opacity: 0.8;
 }
+
+/* Product Gallery - Less-is-more design */
+.product__gallery-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.product__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.product__dot:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.product__dot--active {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+}
+
+/* 響應式設計 - 移動設備上調整點的大小 */
+@media (max-width: 768px) {
+  .product__dots {
+    gap: 12px;
+    padding: 12px 0;
+  }
+  
+  .product__dot {
+    width: 10px;
+    height: 10px;
+  }
+}
