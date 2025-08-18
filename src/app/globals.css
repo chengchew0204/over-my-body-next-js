@@ -513,147 +513,108 @@ body:not(.bg-home) .main-visual {
 .product__tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .product__tag { font-size: 12px; opacity: .7; }
 
-/* Product Page Cart Section */
+/* Product Page Cart Section - Inline Layout */
 .product__cart-section {
   margin: 20px 0;
   padding: 20px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.product__quantity-selector {
-  margin-bottom: 16px;
-}
-
-.quantity-label {
-  display: block;
-  color: var(--text-white);
-  font-size: 14px;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.quantity-controls-product {
+.product__cart-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 }
 
-.qty-btn-product {
+.quantity-controls-inline {
+  display: flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.qty-btn-inline {
+  background: transparent;
+  border: none;
   color: var(--text-white);
   width: 32px;
   height: 32px;
-  border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  border-radius: 2px;
 }
 
-.qty-btn-product:hover:not(:disabled) {
+.qty-btn-inline:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
 }
 
-.qty-btn-product:disabled {
+.qty-btn-inline:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.qty-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.qty-display-inline {
   color: var(--text-white);
-  width: 60px;
-  height: 32px;
-  border-radius: 4px;
-  text-align: center;
   font-size: 14px;
-  padding: 0;
+  font-weight: 500;
+  min-width: 40px;
+  text-align: center;
+  padding: 0 8px;
 }
 
-.qty-input:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.product__buttons {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.product__addcart {
+.product__addcart-inline {
   background: var(--accent);
   border: none;
   color: #000;
-  padding: 12px 24px;
+  padding: 8px 24px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   transition: all 0.3s ease;
-  flex: 1;
-  min-width: 140px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.product__addcart:hover:not(:disabled) {
+.product__addcart-inline:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.9);
   transform: translateY(-1px);
 }
 
-.product__addcart:disabled {
+.product__addcart-inline:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.product__addcart.adding {
+.product__addcart-inline.adding {
   background: rgba(0, 128, 0, 0.8);
   color: var(--text-white);
 }
 
-.product__buybtn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: var(--text-white);
-  padding: 12px 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 140px;
-}
-
-.product__buybtn:hover {
-  border-color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.1);
-}
-
 /* Mobile responsive for product page */
 @media (max-width: 768px) {
-  .quantity-controls-product {
+  .product__cart-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .quantity-controls-inline {
     justify-content: center;
   }
   
-  .product__buttons {
-    flex-direction: column;
-  }
-  
-  .product__addcart,
-  .product__buybtn {
-    min-width: 100%;
+  .product__addcart-inline {
+    width: 100%;
   }
 }
 
@@ -1112,8 +1073,8 @@ body:not(.bg-home) .main-visual {
 
 .cart-tooltip {
   position: absolute;
-  bottom: 50px;
-  right: 0;
+  bottom: 45px;
+  right: -10px;
   background: var(--primary-bg);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -1122,6 +1083,16 @@ body:not(.bg-home) .main-visual {
   max-width: 300px;
   backdrop-filter: blur(10px);
   animation: fadeInUp 0.2s ease;
+}
+
+.cart-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 10px;
+  width: 35px;
+  height: 15px;
+  background: transparent;
 }
 
 @keyframes fadeInUp {

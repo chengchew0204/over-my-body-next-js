@@ -49,58 +49,37 @@ export default function ProductPanel({ product }: ProductPanelProps) {
         />
       )}
 
-      {/* Quantity Selector and Add to Cart */}
+      {/* Horizontal Quantity Selector and Add to Cart */}
       <div className="product__cart-section">
-        <div className="product__quantity-selector">
-          <label htmlFor="quantity" className="quantity-label">Quantity:</label>
-          <div className="quantity-controls-product">
+        <div className="product__cart-row">
+          <div className="quantity-controls-inline">
             <button 
               onClick={() => handleQuantityChange(quantity - 1)}
-              className="qty-btn-product"
+              className="qty-btn-inline"
               disabled={quantity <= 1}
               type="button"
             >
               −
             </button>
-            <input 
-              id="quantity"
-              type="number" 
-              value={quantity}
-              onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-              className="qty-input"
-              min="1"
-              max="99"
-            />
+            <span className="qty-display-inline">{quantity}</span>
             <button 
               onClick={() => handleQuantityChange(quantity + 1)}
-              className="qty-btn-product"
+              className="qty-btn-inline"
               disabled={quantity >= 99}
               type="button"
             >
               +
             </button>
           </div>
-        </div>
 
-        <div className="product__buttons">
           <button
             onClick={handleAddToCart}
-            className={`product__addcart ${isAdding ? "adding" : ""}`}
+            className={`product__addcart-inline ${isAdding ? "adding" : ""}`}
             disabled={isAdding}
             type="button"
           >
-            {isAdding ? "Adding..." : "ADD TO CART"}
+            {isAdding ? "ADDING..." : "ADD TO CART"}
           </button>
-          
-          {product.buyUrl && (
-            <button
-              onClick={handleExternalBuy}
-              className="product__buybtn"
-              type="button"
-            >
-              BUY EXTERNAL
-            </button>
-          )}
         </div>
       </div>
 
