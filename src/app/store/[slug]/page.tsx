@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { fetchAllSlugs, fetchProductBySlug } from "@/lib/cms";
 import ProductGallery from "@/components/ProductGallery";
+import ProductPanel from "@/components/ProductPanel";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,42 +37,11 @@ export default async function ProductPage({ params }: Props) {
   const images = product.images?.length ? product.images : [product.coverImage];
 
   return (
-    
     <main className="product">
       <div className="product__media">
         <ProductGallery images={images} title={product.title} />
       </div>
-
-      <aside className="product__panel">
-        <h1 className="product__title">{product.title}</h1>
-        <div className="product__price">{product.priceText}</div>
-
-        {product.description && (
-          <div 
-            className="product__desc" 
-            dangerouslySetInnerHTML={{ __html: product.description.replace(/\n/g, '<br>') }}
-          />
-        )}
-
-        {product.buyUrl && (
-          <a
-            href={product.buyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="product__buybtn"
-          >
-            ADD TO CART
-          </a>
-        )}
-
-        {product.tags?.length ? (
-          <div className="product__tags">
-            {product.tags.map((t) => (
-              <span key={t} className="product__tag">#{t}</span>
-            ))}
-          </div>
-        ) : null}
-      </aside>
+      <ProductPanel product={product} />
     </main>
   );
 }
