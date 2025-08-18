@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Cart, CartItem, addToCart, removeFromCart, updateQuantity, clearCart, getCart } from "@/lib/cart";
+import { Cart, addToCart, removeFromCart, updateQuantity, clearCart, getCart } from "@/lib/cart";
 import { Product } from "@/lib/cms";
 
 type CartContextType = {

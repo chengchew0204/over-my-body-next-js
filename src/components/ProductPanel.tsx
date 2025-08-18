@@ -31,7 +31,7 @@ export default function ProductPanel({ product }: ProductPanelProps) {
     }, 1000);
   };
 
-  const handleExternalBuy = () => {
+  const _handleExternalBuy = () => {
     if (product.buyUrl) {
       window.open(product.buyUrl, '_blank');
     }
