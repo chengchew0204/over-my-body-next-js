@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Product } from "@/lib/cms";
+import { Product } from "@/lib/sanity-cms";
 import ProductItem from "@/components/ProductItem";
 
 type StoreGridProps = {

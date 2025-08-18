@@ -1,16 +1,18 @@
-// TODO: Handle on-demand revalidation when content changes externally (e.g., Vercel Cron)
-
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 
-/**
- * API route for on-demand revalidation
- * Future implementation will handle cache invalidation for external content updates
- */
-export async function POST(_request: NextRequest) {
-  // TODO: Implement revalidation logic
-  // Example: revalidatePath('/releases') when Bandcamp releases change
-  
-  return NextResponse.json({ 
-    message: 'Revalidation endpoint - not implemented yet' 
-  }, { status: 501 });
+export async function POST(req: NextRequest) {
+  const secret = req.headers.get('x-sanity-secret');
+  if (secret !== process.env.SANITY_WEBHOOK_SECRET) {
+    return NextResponse.json({ ok: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  const body = await req.json().catch(() => ({} as any));
+  const docType = body?.transition?.to?._type || body?._type || body?.type;
+
+  if (docType === 'release') revalidateTag('releases');
+  if (docType === 'track') revalidateTag('tracks');
+  if (docType === 'product') revalidateTag('products');
+
+  return NextResponse.json({ revalidated: true, docType: docType ?? 'unknown' });
 }

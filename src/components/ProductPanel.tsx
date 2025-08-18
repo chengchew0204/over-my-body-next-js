@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Product } from "@/lib/cms";
+import { Product } from "@/lib/sanity-cms";
 import { useCart } from "./CartContext";
 
 type ProductPanelProps = {

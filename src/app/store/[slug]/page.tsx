@@ -1,6 +1,6 @@
 // src/app/store/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import { fetchAllSlugs, fetchProductBySlug } from "@/lib/cms";
+import { fetchAllSlugs, fetchProductBySlug } from "@/lib/sanity-cms";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPanel from "@/components/ProductPanel";
 

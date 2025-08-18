@@ -10,12 +10,19 @@ interface ProductGalleryProps {
 
 export default function ProductGallery({ images, title }: ProductGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Filter out empty or null image URLs
+  const validImages = images.filter(img => img && img.trim() !== '');
+  
+  if (validImages.length === 0) {
+    return null; // Don't render anything if no valid images
+  }
 
-  if (images.length === 1) {
+  if (validImages.length === 1) {
     return (
       <div className="product__hero">
         <Image
-          src={images[0]}
+          src={validImages[0]}
           alt={title}
           fill
           sizes="(max-width: 1200px) 100vw, 1200px"
@@ -28,13 +35,13 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? validImages.length - 1 : prevIndex - 1
     );
   };
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) => 
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === validImages.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -43,7 +50,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
       {/* Main image display with navigation arrows */}
       <div className="product__hero">
         <Image
-          src={images[currentIndex]}
+          src={validImages[currentIndex]}
           alt={`${title} - Image ${currentIndex + 1}`}
           fill
           sizes="(max-width: 1200px) 100vw, 1200px"
@@ -70,7 +77,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
 
       {/* Thumbnail navigation */}
       <div className="product__thumbs">
-        {images.map((src, index) => (
+        {validImages.map((src, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}

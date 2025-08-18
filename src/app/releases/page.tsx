@@ -1,19 +1,27 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { extractArtistFromDescription, generateBandcampUrl, type Album } from '@/lib/albumUtils';
-import albumsData from '@/data/Album.json';
+import { sanity } from '@/lib/sanity';
+import { groq } from 'next-sanity';
+import { getSanityImageUrl } from '@/lib/image-utils';
 
 export const metadata: Metadata = {
   title: '跨我身體 OVER MY BODY - Releases',
   description: 'Discover our catalog of avant-garde sounds and experimental compositions from emerging and established artists.',
 };
 
+const RELEASES = groq`*[_type == "release"]|order(coalesce(releaseDate, "1900-01-01") desc){
+  _id, name, "slug": slug.current, artist, bandcampUrl,
+  "coverUrl": cover.asset->url, externalId, releaseDate, type
+}`;
+
+export const revalidate = 60;
+
 /**
  * Releases page component - displays the catalog of music releases
- * Data sourced from Album.json
+ * Data sourced from Sanity CMS
  */
-export default function ReleasesPage() {
-  const albums = albumsData as Album[];
+export default async function ReleasesPage() {
+  const releases = await sanity.fetch(RELEASES, {}, { next: { tags: ['releases'] } });
 
   return (
     <>
@@ -21,29 +29,30 @@ export default function ReleasesPage() {
       <p className="lead">Discover our catalog of avant-garde sounds and experimental compositions from emerging and established artists.</p>
 
       <div className="release-grid">
-        {albums.map((album) => {
-          const artist = extractArtistFromDescription(album.description);
-          const bandcampUrl = album.buyUrl || generateBandcampUrl(album.slug);
+        {releases?.map((release: any) => {
+          const bandcampUrl = release.bandcampUrl || `https://overmybody.bandcamp.com/album/${release.slug}`;
           
           return (
             <a
-              key={album.id}
+              key={release._id}
               href={bandcampUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="release-item"
             >
           <div className="release-art">
-                <Image
-                  src={album.coverImage}
-                  alt={album.title}
-                  width={300}
-                  height={300}
-                />
+                {release.coverUrl && (
+                  <Image
+                    src={getSanityImageUrl(release.coverUrl, 'medium', 95)}
+                    alt={release.name}
+                    width={300}
+                    height={300}
+                  />
+                )}
           </div>
           <div className="release-info">
-                <h3>{album.title}</h3>
-                <p>{artist}</p>
+                <h3>{release.name}</h3>
+                <p>{release.artist}</p>
           </div>
         </a>
           );

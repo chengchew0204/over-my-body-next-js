@@ -1,5 +1,5 @@
 // src/app/store/page.tsx
-import { fetchProducts } from "@/lib/cms";
+import { fetchProducts } from "@/lib/sanity-cms";
 import StoreGrid from "./StoreGrid";
 
 export const metadata = {
@@ -7,7 +7,6 @@ export const metadata = {
   description: "Physical releases and merchandise from OVER MY BODY.",
 };
 
-// ISR is fine for a CMS-backed list. Adjust as needed later.
 export const revalidate = 60;
 
 export default async function StorePage() {

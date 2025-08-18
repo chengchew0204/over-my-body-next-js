@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Cart, addToCart, removeFromCart, updateQuantity, clearCart, getCart } from "@/lib/cart";
-import { Product } from "@/lib/cms";
+import { Product } from "@/lib/sanity-cms";
 
 type CartContextType = {
   cart: Cart;

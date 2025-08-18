@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Product } from "@/lib/cms";
+import { Product } from "@/lib/sanity-cms";
 import { useCart } from "./CartContext";
 import QuantitySelector from "./QuantitySelector";
 
@@ -31,12 +31,14 @@ export default function ProductItem({ product }: ProductItemProps) {
     <div className="release-item product-item">
       <Link href={`/store/${product.slug}`} className="product-link">
         <div className="release-art">
-          <Image
-            src={product.coverImage}
-            alt={product.title}
-            width={300}
-            height={300}
-          />
+          {product.coverImage && (
+            <Image
+              src={product.coverImage}
+              alt={product.title}
+              width={300}
+              height={300}
+            />
+          )}
         </div>
         <div className="release-info">
           <h3>{product.title}</h3>

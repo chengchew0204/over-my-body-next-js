@@ -52,12 +52,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 {cart.items.map((item) => (
                   <div key={item.product.id} className="cart-item">
                     <div className="cart-item-image">
-                      <Image
-                        src={item.product.coverImage}
-                        alt={item.product.title}
-                        width={60}
-                        height={60}
-                      />
+                      {item.product.coverImage && (
+                        <Image
+                          src={item.product.coverImage}
+                          alt={item.product.title}
+                          width={60}
+                          height={60}
+                        />
+                      )}
                     </div>
                     <div className="cart-item-info">
                       <h4>{item.product.title}</h4>
