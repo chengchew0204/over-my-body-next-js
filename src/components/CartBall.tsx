@@ -8,6 +8,7 @@ export default function CartBall() {
   const { cart, itemCount, isLoading, updateItemQuantity, removeItem } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -18,8 +19,14 @@ export default function CartBall() {
   };
 
   const handleCartClick = () => {
-    setIsDrawerOpen(true);
-    setIsHovered(false);
+    if (isTouchDevice && !isHovered) {
+      // On touch devices, first click shows tooltip
+      setIsHovered(true);
+    } else {
+      // Second click or non-touch devices open drawer
+      setIsDrawerOpen(true);
+      setIsHovered(false);
+    }
   };
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
@@ -31,6 +38,9 @@ export default function CartBall() {
   };
 
   const handleMouseEnter = () => {
+    // Disable hover on touch devices
+    if (isTouchDevice) return;
+    
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
@@ -39,20 +49,46 @@ export default function CartBall() {
   };
 
   const handleMouseLeave = () => {
+    // Disable hover on touch devices
+    if (isTouchDevice) return;
+    
     // Use a longer delay to prevent accidental closing
     hoverTimeoutRef.current = setTimeout(() => {
       setIsHovered(false);
     }, 500); // 500ms delay for better user experience
   };
 
-  // Cleanup timeout on unmount
+  // Detect touch device and cleanup timeout on unmount
   useEffect(() => {
+    // Check if device supports touch
+    const checkTouchDevice = () => {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    
+    checkTouchDevice();
+    
     return () => {
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
       }
     };
   }, []);
+
+  // Handle click outside to close tooltip on touch devices
+  useEffect(() => {
+    if (!isTouchDevice || !isHovered) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsHovered(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isTouchDevice, isHovered]);
 
   // Don't render if loading or empty cart
   if (isLoading || itemCount === 0) {
@@ -83,8 +119,8 @@ export default function CartBall() {
         {isHovered && (
           <div 
             className="cart-tooltip"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={!isTouchDevice ? handleMouseEnter : undefined}
+            onMouseLeave={!isTouchDevice ? handleMouseLeave : undefined}
           >
             <div className="cart-tooltip-header">
               Cart ({itemCount} {itemCount === 1 ? 'item' : 'items'})
@@ -130,7 +166,7 @@ export default function CartBall() {
                 onClick={handleCartClick}
                 className="view-cart-btn"
               >
-                View Cart
+                {isTouchDevice ? 'Tap Again for Cart' : 'View Cart'}
               </button>
             </div>
           </div>

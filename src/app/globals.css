@@ -1484,13 +1484,69 @@ body:not(.bg-home) .main-visual {
   }
   
   .cart-tooltip {
-    min-width: 200px;
-    max-width: 250px;
-    right: -50px; /* Center tooltip relative to ball */
+    min-width: 280px;
+    max-width: calc(100vw - 40px); /* Prevent overflow */
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    width: max-content;
+    max-width: calc(100vw - 40px); /* Ensure it doesn't exceed screen width */
+  }
+  
+  .cart-tooltip::before {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+  
+  .cart-tooltip::after {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
   
   .quantity-popup {
     top: -50px;
     right: -20px; /* Adjust for mobile */
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .cart-tooltip {
+    min-width: 260px;
+    max-width: calc(100vw - 20px); /* Even smaller margins for very small screens */
+    padding: 12px; /* Reduce padding slightly */
+  }
+  
+  .cart-ball-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .item-name {
+    font-size: 11px; /* Slightly smaller text on very small screens */
+  }
+  
+  .cart-tooltip-header {
+    font-size: 13px;
+  }
+  
+  /* Improve touch target sizes */
+  .tooltip-qty-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .tooltip-remove-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+  }
+  
+  /* Add tap highlight color for touch devices */
+  .cart-ball {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
   }
 }
