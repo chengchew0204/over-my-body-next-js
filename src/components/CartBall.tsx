@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useCart } from "./CartContext";
 import CartDrawer from "./CartDrawer";
 
@@ -8,10 +8,8 @@ export default function CartBall() {
   const { cart, itemCount, isLoading, updateItemQuantity, removeItem } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  if (isLoading || itemCount === 0) {
-    return null; // Don't show if empty or loading
-  }
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const formatPrice = (price: string) => {
     // Extract number from price text like "$28.4" -> "28.4"
@@ -32,12 +30,42 @@ export default function CartBall() {
     removeItem(productId);
   };
 
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Use a longer delay to prevent accidental closing
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 500); // 500ms delay for better user experience
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Don't render if loading or empty cart
+  if (isLoading || itemCount === 0) {
+    return null;
+  }
+
   return (
     <>
       <div 
+        ref={containerRef}
         className="cart-ball-container"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Font Awesome Cart Icon */}
         <div className="cart-ball" onClick={handleCartClick}>
@@ -55,8 +83,8 @@ export default function CartBall() {
         {isHovered && (
           <div 
             className="cart-tooltip"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             <div className="cart-tooltip-header">
               Cart ({itemCount} {itemCount === 1 ? 'item' : 'items'})
