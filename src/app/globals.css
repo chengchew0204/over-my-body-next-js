@@ -109,6 +109,7 @@ body:not(.bg-home) .main-visual {
   right: calc(env(safe-area-inset-right) + var(--tr-x));
   width: 351px;
   height: 106px;
+  transform: scale(0.75);
   transform-origin: top right; /* 從右上角縮放 */
 }
 
