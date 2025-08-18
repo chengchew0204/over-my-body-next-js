@@ -26,6 +26,13 @@ const eslintConfig = [
         }
       ]
     }
+  },
+  {
+    files: ["src/lib/notion-cms.ts"],
+    rules: {
+      // Allow any types in Notion CMS integration file since Notion API responses are complex
+      "@typescript-eslint/no-explicit-any": "off"
+    }
   }
 ];
 
