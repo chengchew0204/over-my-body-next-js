@@ -402,7 +402,7 @@ body:not(.bg-home) .main-visual {
     margin-bottom: 2rem;
   }
 
-  /* Responsive release grid */
+  /* Mobile responsive release grid - 2 columns */
   .release-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -422,7 +422,7 @@ body:not(.bg-home) .main-visual {
   }
 }
 
-/* Extra small screens (phones in portrait) */
+/* Extra small screens (phones in portrait) - 1 column for very small screens */
 @media (max-width: 480px) {
   .release-grid {
     grid-template-columns: 1fr;
@@ -527,6 +527,14 @@ body:not(.bg-home) .main-visual {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+}
+
+/* Tablet responsive design */
+@media (max-width: 1024px) {
+  .release-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
 }
 
 .release-item {
