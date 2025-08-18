@@ -1466,7 +1466,7 @@ body:not(.bg-home) .main-visual {
   }
   
   .cart-overlay {
-    opacity: 1; /* Always show on mobile */
+    display: none; /* Hide cart overlay on mobile */
   }
   
   .cart-ball-container {
