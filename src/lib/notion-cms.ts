@@ -4,6 +4,8 @@
  * Provides minimal query functions for Next.js to use Notion as a CMS
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Client } from '@notionhq/client'
 
 // Initialize Notion client
