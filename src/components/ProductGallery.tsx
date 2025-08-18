@@ -26,9 +26,21 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
     );
   }
 
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   return (
     <div className="product__gallery-container">
-      {/* Main image display */}
+      {/* Main image display with navigation arrows */}
       <div className="product__hero">
         <Image
           src={images[currentIndex]}
@@ -38,21 +50,43 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
           className="product__heroimg"
           priority={currentIndex === 0}
         />
+        
+        {/* Navigation arrows */}
+        <button
+          onClick={goToPrevious}
+          className="product__nav product__nav--prev"
+          aria-label="Previous image"
+        >
+          ‹
+        </button>
+        <button
+          onClick={goToNext}
+          className="product__nav product__nav--next"
+          aria-label="Next image"
+        >
+          ›
+        </button>
       </div>
 
-      {/* Simple dot indicators */}
-      {images.length > 1 && (
-        <div className="product__dots">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`product__dot ${index === currentIndex ? 'product__dot--active' : ''}`}
-              aria-label={`View image ${index + 1}`}
+      {/* Thumbnail navigation */}
+      <div className="product__thumbs">
+        {images.map((src, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`product__thumb ${index === currentIndex ? 'product__thumb--active' : ''}`}
+            aria-label={`View image ${index + 1}`}
+          >
+            <Image
+              src={src}
+              alt={`${title} thumbnail ${index + 1}`}
+              fill
+              sizes="80px"
+              className="product__thumbimg"
             />
-          ))}
-        </div>
-      )}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
