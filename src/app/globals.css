@@ -321,7 +321,8 @@ body:not(.bg-home) .main-visual {
   .corner--tr {
     width: 280px;
     height: 85px;
-    scale: 0.8;
+    transform: scale(0.75);
+    transform-origin: top right; /* 確保從右上角縮放 */
   }
 
   .corner--bl {
@@ -452,6 +453,68 @@ body:not(.bg-home) .main-visual {
   .panel .lead {
     font-size: 1rem;
   }
+}
+
+
+
+/* ===== Product detail ===== */
+.product {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 40px;
+  padding: 40px 24px 80px;
+}
+@media (max-width: 1024px) { .product { grid-template-columns: 1fr; } }
+
+.product__media { display: flex; flex-direction: column; gap: 16px; }
+.product__hero { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #111; }
+.product__heroimg { object-fit: cover; }
+
+.product__gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 768px) { .product__gallery { grid-template-columns: repeat(3, 1fr); } }
+.product__thumb { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: #111; }
+.product__thumbimg { object-fit: cover; }
+
+.product__panel { display: flex; flex-direction: column; gap: 16px; }
+.product__title { font-size: 22px; line-height: 1.2; }
+.product__price { font-size: 16px; opacity: .9; }
+.product__desc { font-size: 14px; opacity: .85; }
+
+.product__buybtn {
+  display: inline-block; padding: 10px 16px; border: 1px solid #fff;
+  text-align: center; letter-spacing: .04em;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+.product__buybtn:hover { 
+  background: #fff; 
+  color: #000; 
+}
+.product__buybtn:visited {
+  color: #fff;
+}
+.product__buybtn:visited:hover {
+  background: #fff;
+  color: #000;
+}
+
+.product__tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.product__tag { font-size: 12px; opacity: .7; }
+
+/* Product page links styling */
+.product__desc a {
+  color: var(--text-primary);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(235, 235, 235, 0.3);
+  opacity: 0.9;
+  transition: all 0.25s ease;
+}
+
+.product__desc a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  opacity: 1;
 }
 
 /* Release Grid - Less-is-more design */

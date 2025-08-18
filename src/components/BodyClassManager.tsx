@@ -14,7 +14,7 @@ export default function BodyClassManager() {
     // Determine route from pathname
     let route = 'home';
     if (pathname === '/releases') route = 'release';
-    else if (pathname === '/store') route = 'store';
+    else if (pathname === '/store' || pathname.startsWith('/store/')) route = 'store';
     else if (pathname === '/info') route = 'info';
 
     // Update body classes to match original behavior

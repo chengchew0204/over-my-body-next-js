@@ -59,7 +59,7 @@ export default function RootLayout({
 
         {/* Main visual background */}
         <div className="main-visual">
-          <Image src="/asset/homepage-bg-56586a.png" alt="Main Visual" className="main-visual-image" width={1920} height={1080} priority fill sizes="100vw" style={{objectFit: 'cover'}} />
+          <Image src="/asset/homepage-bg-56586a.png" alt="Main Visual" className="main-visual-image" priority fill sizes="100vw" style={{objectFit: 'cover'}} />
         </div>
 
         {/* Center content outlet */}

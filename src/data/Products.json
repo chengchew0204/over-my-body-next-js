@@ -1,0 +1,31 @@
+[
+  {
+    "id": "apex-union-split-01",
+    "slug": "apex-union-split-01",
+    "title": "Apex Union [SPLIT-01 x Club Late Music]",
+    "coverImage": "/store/apex-union/AU-1.jpg",
+    "images": [
+      "/store/apex-union/AU-1.jpg",
+      "/store/apex-union/AU-2.jpg",
+      "/store/apex-union/AU-3.jpg"
+    ],
+    "priceText": "$28.4",
+    "buyUrl": "https://overmybody.bandcamp.com/album/apex-union-split-01-x-club-late-music",
+    "description": "Record/Vinyl + Digital Album by Lujiachi, Bungalovv. Includes unlimited streaming via the free Bandcamp app, plus high-quality download in MP3, FLAC and more. Download available in 16-bit/44.1kHz.\n\nTRACKLIST:\nA side:\n01. Bungalovv – In Between Car Parts\n02. Lujiachi – Segmented Dream\n03. Bungalovv – Xylem\n04. Lujiachi – Nerve\n\nB Side:\n05. Bungalovv – In Between Car Parts (Dj Würm Remix)\n06. Lujiachi – Segmented Dream (Dj Animebby Remix)\n07. Bungalovv – Xylem (B E N N Remix)\n08. Lujiachi – Segmented Dream (jondu Remix)",
+    "tags": ["vinyl", "digital", "split-release"]
+  },
+  {
+    "id": "over-my-body-tour-tee",
+    "slug": "over-my-body-tour-tee",
+    "title": "Over My Body TOUR LOGO T-shirt (Limited)",
+    "coverImage": "/store/over-my-body-tour-tee/OT-1.jpg",
+    "images": [
+      "/store/over-my-body-tour-tee/OT-1.jpg",
+      "/store/over-my-body-tour-tee/OT-2.jpg"
+    ],
+    "priceText": "$30",
+    "buyUrl": "https://overmybody.bandcamp.com/merch/over-my-body-tour-logo-t-shirt-limited",
+    "description": "T-Shirt/Shirt + Digital Album. In collaboration with NXWV, a music label founded by the tech-wear brand Guerrilla-Group, we proudly present the limited edition collaboration merchandise, the Over My Body TOUR LOGO T-shirt. Only 5 limited available on Bandcamp.\n\n- COLOR BLACK\n- OVERSIZED FIT\n- FRONT / REAR SILKSCREEN PRINT\n- NXWV LOGO TAB\n\nIncludes unlimited streaming of Moon Beam via the free Bandcamp app, plus high-quality download in MP3, FLAC and more.\n\nMore info: <a href=\"https://www.nxwv-media.com/zh/collections/top/products/over-my-body-tour-tee\" target=\"_blank\" rel=\"noopener noreferrer\">nxwv-media.com</a>",
+    "tags": ["apparel", "limited", "collaboration", "digital"]
+  }
+]
