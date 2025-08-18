@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * API route for on-demand revalidation
  * Future implementation will handle cache invalidation for external content updates
  */
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   // TODO: Implement revalidation logic
   // Example: revalidatePath('/releases') when Bandcamp releases change
   

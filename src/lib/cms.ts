@@ -18,7 +18,7 @@ export type Product = {
 };
 
 async function readLocalProducts(): Promise<Product[]> {
-  const file = path.join(process.cwd(), "src", "data", "products.json");
+  const file = path.join(process.cwd(), "src", "data", "Products.json");
   const raw = await fs.readFile(file, "utf-8");
   return JSON.parse(raw) as Product[];
 }
