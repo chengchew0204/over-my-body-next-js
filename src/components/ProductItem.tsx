@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/lib/cms";
 import { useCart } from "./CartContext";
-import CartIcon from "./CartIcon";
+import QuantitySelector from "./QuantitySelector";
 
 type ProductItemProps = {
   product: Product;
@@ -15,14 +15,11 @@ export default function ProductItem({ product }: ProductItemProps) {
   const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    e.stopPropagation();
-    
+  const handleAddToCart = (quantity: number) => {
     if (isAdding) return;
     
     setIsAdding(true);
-    addItem(product, 1);
+    addItem(product, quantity);
     
     // Brief visual feedback
     setTimeout(() => {
@@ -47,12 +44,11 @@ export default function ProductItem({ product }: ProductItemProps) {
         </div>
       </Link>
       
-      {/* Cart button overlay */}
+      {/* Quantity selector overlay */}
       <div className="cart-overlay">
-        <CartIcon 
-          size={18} 
-          className={isAdding ? "adding" : ""} 
-          onClick={handleAddToCart}
+        <QuantitySelector 
+          onAddToCart={handleAddToCart}
+          isAdding={isAdding}
         />
       </div>
     </div>

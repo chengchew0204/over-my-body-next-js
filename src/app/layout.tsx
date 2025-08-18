@@ -3,7 +3,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import BodyClassManager from "@/components/BodyClassManager";
 import { CartProvider } from "@/components/CartContext";
-import CartButton from "@/components/CartButton";
+import CartBall from "@/components/CartBall";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -52,16 +52,16 @@ export default function RootLayout({
             </div>
           </div>
 
-          {/* Bottom-Right Corner - Meta info + Cart */}
+          {/* Bottom-Right Corner - Meta info */}
           <div className="corner corner--br">
             <div className="corner-block bottom-right">
               <div className="meta-text">Taiwan-based label<br/>focusing on avant-garde sounds.</div>
-              <div className="corner-icons">
-                <Image src="/asset/bottom-right-icons.svg" alt="Icons" className="bottom-icons" width={80} height={40} />
-                <CartButton />
-              </div>
+              <Image src="/asset/bottom-right-icons.svg" alt="Icons" className="bottom-icons" width={80} height={40} />
             </div>
           </div>
+
+          {/* Cart Ball - Fixed position */}
+          <CartBall />
 
           {/* Main visual background */}
           <div className="main-visual">
