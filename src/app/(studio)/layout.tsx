@@ -9,8 +9,27 @@ export default function StudioLayout({
 }) {
   return (
     <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          body.studio {
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            overflow: hidden !important;
+          }
+          html {
+            height: 100% !important;
+          }
+          body.studio > div {
+            height: 100vh !important;
+          }
+        `
+      }} />
       <StudioBodyManager />
-      {children}
+      <div style={{ height: '100vh', width: '100vw' }}>
+        {children}
+      </div>
     </>
   );
 }
