@@ -9,7 +9,7 @@ type ProductPanelProps = {
 };
 
 export default function ProductPanel({ product }: ProductPanelProps) {
-  const { addItem } = useCart();
+  const { addItem, isInCart, openCartDrawer } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -30,6 +30,12 @@ export default function ProductPanel({ product }: ProductPanelProps) {
       setIsAdding(false);
     }, 1000);
   };
+
+  const handleViewCart = () => {
+    openCartDrawer();
+  };
+
+  const productInCart = isInCart(product.id);
 
   const _handleExternalBuy = () => {
     if (product.buyUrl) {
@@ -73,12 +79,12 @@ export default function ProductPanel({ product }: ProductPanelProps) {
           </div>
 
           <button
-            onClick={handleAddToCart}
-            className={`product__addcart-inline ${isAdding ? "adding" : ""}`}
+            onClick={productInCart ? handleViewCart : handleAddToCart}
+            className={`product__addcart-inline ${isAdding ? "adding" : ""} ${productInCart ? "view-cart" : ""}`}
             disabled={isAdding}
             type="button"
           >
-            {isAdding ? "ADDING..." : "ADD TO CART"}
+            {isAdding ? "ADDING..." : productInCart ? "VIEW CART" : "ADD TO CART"}
           </button>
         </div>
       </div>

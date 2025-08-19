@@ -2,12 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useCart } from "./CartContext";
-import CartDrawer from "./CartDrawer";
 
 export default function CartBall() {
-  const { cart, itemCount, isLoading, updateItemQuantity, removeItem } = useCart();
+  const { cart, itemCount, isLoading, updateItemQuantity, removeItem, openCartDrawer } = useCart();
   const [isHovered, setIsHovered] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,7 +22,7 @@ export default function CartBall() {
       setIsHovered(true);
     } else {
       // Second click or non-touch devices open drawer
-      setIsDrawerOpen(true);
+      openCartDrawer();
       setIsHovered(false);
     }
   };
@@ -174,11 +172,6 @@ export default function CartBall() {
           </div>
         )}
       </div>
-
-      <CartDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-      />
     </>
   );
 }
