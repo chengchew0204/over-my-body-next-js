@@ -100,7 +100,7 @@ body:not(.bg-home) .main-visual {
   left: calc(env(safe-area-inset-left) + var(--tl-x));
   width: 351px;
   height: 21px;
-  transform: scale(0.98);
+  transform: scale(1.27);
   transform-origin: top left; /* 從左上角縮放 */
 }
 
