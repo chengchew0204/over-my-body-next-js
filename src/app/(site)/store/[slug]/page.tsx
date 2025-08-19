@@ -34,7 +34,23 @@ export default async function ProductPage({ params }: Props) {
   const product = await fetchProductBySlug(slug);
   if (!product) notFound();
 
-  const images = product.images?.length ? product.images : [product.coverImage];
+  // Combine cover image and gallery images properly
+  // Cover image should always be first, followed by gallery images
+  const allImages: string[] = [];
+  
+  // Add cover image first if it exists
+  if (product.coverImage) {
+    allImages.push(product.coverImage);
+  }
+  
+  // Add gallery images, but avoid duplicating the cover image
+  if (product.images?.length) {
+    const uniqueGalleryImages = product.images.filter(img => img !== product.coverImage);
+    allImages.push(...uniqueGalleryImages);
+  }
+  
+  // Fallback to cover image only if no images are available
+  const images = allImages.length > 0 ? allImages : [product.coverImage].filter(Boolean);
 
   return (
     <main className="product">
