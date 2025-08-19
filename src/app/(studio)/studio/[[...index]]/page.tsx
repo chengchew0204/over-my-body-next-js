@@ -1,3 +1,5 @@
+'use client';
+
 // Renders Sanity Studio at /studio and all its subroutes.
 
 import { Studio } from 'sanity';
