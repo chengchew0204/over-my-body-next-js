@@ -21,20 +21,12 @@ export default function SiteLayout({
       <CartProvider>
         {/* Persistent corners (do not re-render across route changes) */}
         
-        {/* Top-Left Corner - Logo */}
+        {/* Top-Left Corner - English Subtitle Only */}
         <div className="corner corner--tl">
           <div className="corner-block top-left">
-            <Link href="/" className="logo-link">
-              <Image src="/asset/top-left-logo.svg" alt="Logo" className="logo-graphic" width={120} height={40} priority />
+            <Link href="/" className="subtitle-link">
+              <Image src="/asset/english-subtitle.svg" alt="OVER MY BODY" className="english-subtitle" width={150} height={20} priority />
             </Link>
-          </div>
-        </div>
-
-        {/* Top-Right Corner - Title */}
-        <div className="corner corner--tr">
-          <div className="corner-block top-right">
-            <Image src="/asset/chinese-title.svg" alt="跨我身體" className="chinese-title" width={200} height={60} priority />
-            <Image src="/asset/english-subtitle.svg" alt="OVER MY BODY" className="english-subtitle" width={150} height={20} priority />
           </div>
         </div>
 
