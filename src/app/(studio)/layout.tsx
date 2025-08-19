@@ -1,5 +1,7 @@
 // Minimal Studio root: no site chrome, no globals.css import.
 
+import StudioBodyManager from '@/components/StudioBodyManager';
+
 export default function StudioLayout({
   children,
 }: {
@@ -7,14 +9,7 @@ export default function StudioLayout({
 }) {
   return (
     <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            document.body.className = 'studio';
-            document.body.removeAttribute('data-page');
-          `,
-        }}
-      />
+      <StudioBodyManager />
       {children}
     </>
   );

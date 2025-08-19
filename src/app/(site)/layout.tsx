@@ -4,6 +4,7 @@ import '../globals.css'; // import global CSS for the site only
 
 import Navigation from '@/components/Navigation';
 import BodyClassManager from '@/components/BodyClassManager';
+import SiteBodyManager from '@/components/SiteBodyManager';
 import { CartProvider } from '@/components/CartContext';
 import CartBall from '@/components/CartBall';
 import Link from 'next/link';
@@ -16,14 +17,7 @@ export default function SiteLayout({
 }) {
   return (
     <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            document.body.className = 'bg-home';
-            document.body.setAttribute('data-page', 'home');
-          `,
-        }}
-      />
+      <SiteBodyManager />
       <CartProvider>
         {/* Persistent corners (do not re-render across route changes) */}
         
