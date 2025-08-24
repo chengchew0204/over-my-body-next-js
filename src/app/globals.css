@@ -650,6 +650,11 @@ body:not(.bg-home) .main-visual {
   color: inherit;
   transition: transform 0.3s ease, opacity 0.3s ease;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
 }
 
 .release-item:hover {
@@ -1655,4 +1660,11 @@ a {
 /* Hide background image on typography page */
 body.bg-typography .main-visual {
   display: none;
+}
+
+/* Hide corner overlays when modal is open */
+body.modal-open .corner {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
