@@ -6,7 +6,7 @@
 /* Minimal reset */
 *,*::before,*::after { box-sizing: border-box; }
 html, body { height: 100%; }
-body { margin: 0; color: #EBEBEB; background: #1A1A1A; font-family: "Neue Haas Grotesk Text Pro", Inter, system-ui, -apple-system, "PingFang TC","Noto Sans TC", sans-serif; line-height: 1.5; }
+body { margin: 0; color: #EBEBEB; background: #1A1A1A; font-family: var(--font-evo2), system-ui, -apple-system, "PingFang TC","Noto Sans TC", sans-serif; line-height: 1.5; }
 img, video { max-width: 100%; display: block; }
 
 /* Design tokens from Figma */
@@ -162,7 +162,7 @@ body:not(.bg-home) .main-visual {
 
 /* Bottom-Left Component - Navigation */
 .corner-nav {
-  width: 440px;
+  width: 570px;
   height: 50px;
   display: flex;
   align-items: center;
@@ -182,7 +182,7 @@ body:not(.bg-home) .main-visual {
 .corner-nav a {
   text-decoration: none;
   color: var(--text-secondary);
-  font-family: "Neue Haas Grotesk Text Pro", sans-serif;
+  font-family: var(--font-evo2), sans-serif;
   font-weight: 400;
   font-size: 24px;
   line-height: 1.223em;
@@ -247,7 +247,7 @@ body:not(.bg-home) .main-visual {
 }
 
 .meta-text {
-  font-family: "Neue Haas Grotesk Text Pro", sans-serif;
+  font-family: var(--font-evo2), sans-serif;
   font-weight: 400;
   font-size: 20px;
   line-height: 0.95em;
@@ -1596,4 +1596,63 @@ body:not(.bg-home) .main-visual {
   .cart-ball {
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
   }
+}
+
+/* ===== EVO2 global font setup ===== */
+/* Use EVO2*/
+html, body {
+  font-family: var(--font-evo2), system-ui, -apple-system, sans-serif;
+}
+
+/* Typography hierarchy with EVO2 weights */
+/* Headings - from heaviest to lightest */
+h1 { 
+  font-weight: 900; /* Extreme - Black */
+  letter-spacing: 0.02em; 
+  line-height: 1.1; 
+}
+
+h2 { 
+  font-weight: 900; /* Extreme - Black */
+  letter-spacing: 0.01em; 
+  line-height: 1.2; 
+}
+
+h3 { 
+  font-weight: 700; /* Massive - Bold */
+  line-height: 1.25; 
+}
+
+h4 { 
+  font-weight: 700; /* Massive - Bold */
+  line-height: 1.3; 
+}
+
+/* Body text */
+p { 
+  font-weight: 400; /* Regular */
+  line-height: 1.5; 
+}
+
+/* Links */
+a { 
+  font-weight: 400; /* Regular */
+  line-height: 1.5; 
+}
+
+/* Utility for italic emphasis using the Oblique faces */
+.emph, em, i { 
+  font-style: italic; 
+  font-weight: inherit; /* Inherit parent weight */
+}
+
+/* Keep the four-corner fixed UI stable across weights */
+.corner-fixed * { 
+  font-weight: 700; 
+  line-height: 1.1; 
+}
+
+/* Hide background image on typography page */
+body.bg-typography .main-visual {
+  display: none;
 }

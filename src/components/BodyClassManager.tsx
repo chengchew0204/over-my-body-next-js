@@ -16,6 +16,7 @@ export default function BodyClassManager() {
     if (pathname === '/releases') route = 'release';
     else if (pathname === '/store' || pathname.startsWith('/store/')) route = 'store';
     else if (pathname === '/info') route = 'info';
+    else if (pathname === '/typography') route = 'typography';
 
     // Update body classes to match original behavior
     document.body.className = `bg-${route}`;

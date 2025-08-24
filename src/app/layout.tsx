@@ -1,4 +1,5 @@
 // Minimal global root: do not import globals.css here.
+import { evo2 } from "./fonts";
 
 export const metadata = {
   title: 'OVER MY BODY',
@@ -11,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-Hant">
+    <html lang="zh-Hant" className={evo2.variable}>
       <body>{children}</body>
     </html>
   );

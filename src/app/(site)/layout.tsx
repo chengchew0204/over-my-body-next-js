@@ -40,7 +40,6 @@ export default function SiteLayout({
         {/* Bottom-Right Corner - Meta info */}
         <div className="corner corner--br">
           <div className="corner-block bottom-right">
-            <div className="meta-text">Taiwan-based label<br/>focusing on avant-garde sounds.</div>
             <Image src="/asset/bottom-right-icons.svg" alt="Icons" className="bottom-icons" width={80} height={40} />
           </div>
         </div>
