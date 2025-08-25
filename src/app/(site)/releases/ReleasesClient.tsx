@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { getSanityImageUrl } from '@/lib/image-utils';
 import AlbumModal from '@/components/AlbumModal';
+import ScrollingTitle from '@/components/ScrollingTitle';
 
 type Release = {
   _id: string;
@@ -82,7 +83,18 @@ export default function ReleasesClient({ releases }: ReleasesClientProps) {
               )}
             </div>
             <div className="release-info">
-              <h3>{release.name}</h3>
+              <ScrollingTitle
+                text={release.name}
+                style={{
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  color: 'var(--text-white)',
+                  margin: '0 0 0.25rem 0',
+                  lineHeight: '1.3',
+                  letterSpacing: '0.02em',
+                  fontFamily: 'var(--font-evo2), system-ui, -apple-system, sans-serif'
+                }}
+              />
               <p>{release.artist}</p>
             </div>
           </button>
