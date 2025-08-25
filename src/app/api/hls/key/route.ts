@@ -58,10 +58,10 @@ export async function GET(req: NextRequest) {
 
   try {
     const bytes = hexToBytes(hex);
-    return new Response(bytes, {
+    const blob = new Blob([bytes], { type: "application/octet-stream" });
+    return new Response(blob, {
       status: 200,
       headers: {
-        "Content-Type": "application/octet-stream",
         "Cache-Control": "no-store",
       },
     });
