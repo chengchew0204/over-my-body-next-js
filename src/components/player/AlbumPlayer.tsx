@@ -229,12 +229,11 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
 
   if (isLoading) {
     return (
-      <div style={{
+      <div className={className} style={{
         background: 'white',
         borderRadius: '16px',
         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-        padding: '24px',
-        ...className
+        padding: '24px'
       }}>
         <div style={{
           animation: 'pulse 1.5s ease-in-out infinite'
@@ -266,14 +265,13 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
 
   if (error || !album || tracks.length === 0) {
     return (
-      <div style={{
+      <div className={className} style={{
         background: 'white',
         borderRadius: '16px',
         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
         padding: '24px',
         textAlign: 'center',
-        color: '#6b7280',
-        ...className
+        color: '#6b7280'
       }}>
         <div style={{ fontSize: '32px', marginBottom: '8px' }}>🎵</div>
         <p>{error || 'No tracks found for this album'}</p>
@@ -282,13 +280,12 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
   }
 
   return (
-    <div style={{
+    <div className={className} style={{
       background: 'white',
       borderRadius: '16px',
       boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
       overflow: 'hidden',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      ...className
+      fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
       {/* Album Header */}
       <div style={{ padding: '24px', borderBottom: '1px solid #f3f4f6' }}>
