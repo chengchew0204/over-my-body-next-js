@@ -277,6 +277,8 @@ body:not(.bg-home) .main-visual {
            calc(var(--bl-x) + 20px);
   min-height: 100dvh;
   display: block;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .panel {
@@ -654,6 +656,7 @@ body:not(.bg-home) .main-visual {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 /* Tablet responsive design */
@@ -676,6 +679,7 @@ body:not(.bg-home) .main-visual {
   width: 100%;
   text-align: left;
   font-family: var(--font-evo2), system-ui, -apple-system, sans-serif;
+  min-width: 0;
 }
 
 .release-item:hover {
@@ -688,6 +692,8 @@ body:not(.bg-home) .main-visual {
   overflow: hidden;
   margin-bottom: 0.75rem;
   background: rgba(255,255,255,0.05);
+  width: 100%;
+  min-width: 0;
 }
 
 .release-art img {
