@@ -397,10 +397,10 @@ body:not(.bg-home) .main-visual {
     margin-bottom: 2rem;
   }
 
-  /* Mobile responsive release grid - 2 columns */
+  /* Mobile responsive release grid - 1 column */
   .release-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     margin-top: 2rem;
     padding: 0 8px;
     width: 100%;
@@ -424,11 +424,11 @@ body:not(.bg-home) .main-visual {
   }
 }
 
-/* Extra small screens (phones in portrait) - 2 columns for very small screens */
+/* Extra small screens (phones in portrait) - 1 column for very small screens */
 @media (max-width: 480px) {
   .release-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
     padding: 0 6px;
     width: 100%;
     max-width: 100%;
