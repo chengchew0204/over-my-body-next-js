@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# HLS binary files
+hls/**/*.ts
+**/*.m3u8
+temp-hls-keys.json
