@@ -35,7 +35,8 @@ export async function GET(
     const contentType = getContentType(s3Key);
     const body = await response.Body.transformToByteArray();
 
-    return new NextResponse(body, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return new NextResponse(body as any, {
       status: 200,
       headers: {
         'Content-Type': contentType,
