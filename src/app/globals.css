@@ -38,7 +38,7 @@ img, video { max-width: 100%; display: block; }
 
   
   /* Figma colors */
-  --primary-bg: #1A1A1A;
+  --primary-bg: #000000;
   --text-primary: #EBEBEB;
   --text-white: #FFFFFF;
   --text-secondary: rgba(255,255,255,0.8);
