@@ -97,3 +97,64 @@ export async function fetchAllSlugs(): Promise<string[]> {
   const slugs = await sanity.fetch<SanitySlug[]>(ALL_PRODUCT_SLUGS_QUERY);
   return slugs?.filter(Boolean).map((s) => s.slug) || [];
 }
+
+// Track-related types and functions
+export type Track = {
+  _id: string;
+  name: string;
+  trackNumber: number;
+  durationSec?: number;
+  streamUrl?: string;
+  originalFileLink?: string;
+  externalTrackId?: string;
+  hlsKey?: string;
+};
+
+export type AlbumWithTracks = {
+  _id: string;
+  name: string;
+  artist: string;
+  slug: string;
+  coverUrl?: string;
+  type?: string;
+  releaseDate?: string;
+  tracks: Track[];
+};
+
+const ALBUM_WITH_TRACKS_QUERY = groq`*[_type=="release" && slug.current==$slug][0]{
+  _id,
+  name,
+  artist,
+  "slug": slug.current,
+  "coverUrl": cover.asset->url,
+  type,
+  releaseDate,
+  "tracks": *[_type=="track" && album._ref==^._id] | order(trackNumber asc) {
+    _id,
+    name,
+    trackNumber,
+    durationSec,
+    streamUrl,
+    originalFileLink,
+    externalTrackId,
+    hlsKey
+  }
+}`;
+
+const ALBUM_TRACKS_COUNT_QUERY = groq`count(*[_type=="track" && album._ref==*[_type=="release" && slug.current==$slug][0]._id])`;
+
+export async function fetchAlbumWithTracks(slug: string): Promise<AlbumWithTracks | null> {
+  const album = await sanity.fetch<AlbumWithTracks | null>(ALBUM_WITH_TRACKS_QUERY, { slug }, { next: { tags: ['releases', 'tracks'] } });
+  
+  if (!album) return null;
+  
+  return {
+    ...album,
+    coverUrl: album.coverUrl ? getSanityImageUrl(album.coverUrl, 'medium', 95) : undefined,
+  };
+}
+
+export async function hasTracks(slug: string): Promise<boolean> {
+  const trackCount = await sanity.fetch<number>(ALBUM_TRACKS_COUNT_QUERY, { slug }, { next: { tags: ['tracks'] } });
+  return trackCount > 0;
+}

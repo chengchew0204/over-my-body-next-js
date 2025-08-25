@@ -3,6 +3,65 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Hls from 'hls.js';
+import styles from './AlbumPlayer.module.css';
+
+// 滾動標題組件
+const ScrollingTitle = ({ text, className = '', style = {} }: { text: string; className?: string; style?: React.CSSProperties }) => {
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const [scrollDistance, setScrollDistance] = useState(0);
+  const textRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (textRef.current && containerRef.current) {
+        const textWidth = textRef.current.scrollWidth;
+        const containerWidth = containerRef.current.clientWidth;
+        const shouldScrollText = textWidth > containerWidth;
+        setShouldScroll(shouldScrollText);
+        
+        if (shouldScrollText) {
+          // 計算需要滾動的距離：文字寬度 - 容器寬度 + 一些緩衝空間
+          setScrollDistance(-(textWidth - containerWidth + 20));
+        }
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [text]);
+
+  if (!shouldScroll) {
+    return (
+      <div ref={containerRef} className={className} style={{ overflow: 'hidden', ...style }}>
+        <div ref={textRef} style={{ whiteSpace: 'nowrap' }}>
+          {text}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div ref={containerRef} className={className} style={{ overflow: 'hidden', ...style }}>
+      <motion.div
+        ref={textRef}
+        style={{ whiteSpace: 'nowrap' }}
+        animate={{
+          x: [0, scrollDistance, 0]
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          repeatDelay: 3
+        }}
+      >
+        {text}
+      </motion.div>
+    </div>
+  );
+};
 
 interface Track {
   _id: string;
@@ -148,7 +207,15 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+      // Update progress bar background
+      const progressBar = document.querySelector('input[type="range"]') as HTMLInputElement;
+      if (progressBar) {
+        const percentage = (audio.currentTime / (duration || 1)) * 100;
+        progressBar.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${percentage}%, rgba(255, 255, 255, 0.1) ${percentage}%, rgba(255, 255, 255, 0.1) 100%)`;
+      }
+    };
     const handleLoadedMetadata = () => setDuration(audio.duration);
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
@@ -174,7 +241,16 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [currentTrackIndex, tracks.length]);
+  }, [currentTrackIndex, tracks.length, duration]);
+
+  // Initialize progress bar background
+  useEffect(() => {
+    const progressBar = document.querySelector('input[type="range"]') as HTMLInputElement;
+    if (progressBar) {
+      const percentage = (currentTime / (duration || 1)) * 100;
+      progressBar.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${percentage}%, rgba(255, 255, 255, 0.1) ${percentage}%, rgba(255, 255, 255, 0.1) 100%)`;
+    }
+  }, [currentTime, duration]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -199,6 +275,16 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
     setCurrentTrackIndex(index);
     setIsPlaying(false);
     setCurrentTime(0);
+    
+    // Auto-play the selected track after a short delay to allow state updates
+    setTimeout(() => {
+      if (audioRef.current) {
+        audioRef.current.play().catch((error) => {
+          console.log('Auto-play failed:', error);
+          // Auto-play might be blocked by browser, but that's okay
+        });
+      }
+    }, 100);
   };
 
   const nextTrack = () => {
@@ -230,31 +316,35 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
   if (isLoading) {
     return (
       <div className={className} style={{
-        background: 'white',
-        borderRadius: '16px',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-        padding: '24px'
+        background: 'transparent',
+        borderRadius: '12px',
+        padding: '24px',
+        color: '#ffffff',
+        width: '95%',
+        maxWidth: '95%',
+        margin: '0 auto',
+        fontFamily: 'var(--font-evo2), system-ui, -apple-system, sans-serif'
       }}>
         <div style={{
           animation: 'pulse 1.5s ease-in-out infinite'
         }}>
           <div style={{
             height: '16px',
-            background: '#e5e7eb',
+            background: '#333333',
             borderRadius: '4px',
             marginBottom: '16px',
             width: '75%'
           }}></div>
           <div style={{
             height: '128px',
-            background: '#e5e7eb',
+            background: '#333333',
             borderRadius: '4px',
             marginBottom: '16px',
             width: '100%'
           }}></div>
           <div style={{
             height: '16px',
-            background: '#e5e7eb',
+            background: '#333333',
             borderRadius: '4px',
             width: '50%'
           }}></div>
@@ -266,12 +356,15 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
   if (error || !album || tracks.length === 0) {
     return (
       <div className={className} style={{
-        background: 'white',
-        borderRadius: '16px',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+        background: 'transparent',
+        borderRadius: '12px',
         padding: '24px',
         textAlign: 'center',
-        color: '#6b7280'
+        color: '#cccccc',
+        width: '95%',
+        maxWidth: '95%',
+        margin: '0 auto',
+        fontFamily: 'var(--font-evo2), system-ui, -apple-system, sans-serif'
       }}>
         <div style={{ fontSize: '32px', marginBottom: '8px' }}>🎵</div>
         <p>{error || 'No tracks found for this album'}</p>
@@ -281,25 +374,37 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
 
   return (
     <div className={className} style={{
-      background: 'white',
-      borderRadius: '16px',
-      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+      background: 'transparent',
+      borderRadius: '12px',
       overflow: 'hidden',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: 'var(--font-evo2), system-ui, -apple-system, sans-serif',
+      color: '#ffffff',
+      width: '95%',
+      maxWidth: '95%',
+      margin: '0 auto'
     }}>
-      {/* Album Header */}
-      <div style={{ padding: '24px', borderBottom: '1px solid #f3f4f6' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      {/* Main Player Section */}
+      <div style={{ 
+        padding: '24px',
+      }}>
+        {/* Album Info */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '16px', 
+          marginBottom: '24px',
+          paddingBottom: '16px',
+        }}>
           {album.coverUrl && (
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '12px',
+                width: '48px',
+                height: '48px',
+                borderRadius: '8px',
                 overflow: 'hidden',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                flexShrink: 0
               }}
             >
               <img
@@ -309,168 +414,178 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
               />
             </motion.div>
           )}
-          <div style={{ flex: 1 }}>
-            <h2 style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              color: '#111827',
-              margin: '0 0 4px 0'
-            }}>{album.name}</h2>
-            <p style={{
-              color: '#6b7280',
-              margin: '0 0 8px 0'
-            }}>{album.artist}</p>
-            {album.type && (
-              <span style={{
-                display: 'inline-block',
-                padding: '4px 8px',
-                background: '#f3f4f6',
-                color: '#6b7280',
-                borderRadius: '12px',
-                fontSize: '12px',
-                fontWeight: '500'
-              }}>
-                {album.type}
-              </span>
-            )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <ScrollingTitle
+              text={album.name}
+              className=""
+              style={{
+                fontSize: '16px',
+                fontWeight: '500',
+                color: '#ffffff',
+                margin: '0 0 4px 0'
+              }}
+            />
+            <ScrollingTitle
+              text={album.artist}
+              className=""
+              style={{
+                color: '#999999',
+                margin: '0',
+                fontSize: '14px'
+              }}
+            />
           </div>
         </div>
-      </div>
 
-      {/* Player Controls */}
-      <div style={{ padding: '24px' }}>
-        {/* Current Track Info */}
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <h3 style={{
-            fontSize: '18px',
-            fontWeight: '500',
-            color: '#111827',
-            margin: '0 0 4px 0'
-          }}>
-            {currentTrack?.name || 'No track selected'}
-          </h3>
+        {/* Current Track Info and Time */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '20px',
+          padding: '0 16px'
+        }}>
+          <div style={{ flex: 1, marginRight: '16px', minWidth: 0 }}>
+            <ScrollingTitle
+              text={currentTrack?.name || 'No track selected'}
+              style={{
+                fontSize: '18px',
+                fontWeight: '400',
+                color: '#ffffff',
+                margin: 0
+              }}
+            />
+          </div>
           <p style={{
             fontSize: '14px',
-            color: '#6b7280',
-            margin: 0
+            color: '#999999',
+            margin: 0,
+            flexShrink: 0,
+            minWidth: 'fit-content'
           }}>
-            Track {currentTrack?.trackNumber || 0} of {tracks.length}
+            {formatTime(currentTime)} / {formatTime(duration)}
           </p>
         </div>
 
-        {/* Progress Bar */}
+        {/* Progress Bar with Controls */}
         <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <span style={{
-              fontSize: '12px',
-              color: '#6b7280',
-              width: '40px',
-              textAlign: 'center'
-            }}>
-              {formatTime(currentTime)}
-            </span>
-            <input
-              type="range"
-              min="0"
-              max={duration || 0}
-              value={currentTime}
-              onChange={handleSeek}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            {/* Play/Pause Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={togglePlay}
               style={{
-                flex: 1,
-                height: '4px',
-                background: '#e5e7eb',
-                borderRadius: '2px',
-                appearance: 'none',
-                cursor: 'pointer'
+                padding: '8px',
+                borderRadius: '50%',
+                background: '#ffffff',
+                color: '#000000',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
               }}
-            />
-            <span style={{
-              fontSize: '12px',
-              color: '#6b7280',
-              width: '40px',
-              textAlign: 'center'
+            >
+              {isPlaying ? (
+                <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '16px', height: '16px' }}>
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '16px', height: '16px' }}>
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                </svg>
+              )}
+            </motion.button>
+
+            {/* Progress Bar */}
+            <div style={{ flex: 1 }}>
+              <input
+                type="range"
+                min="0"
+                max={duration || 0}
+                value={currentTime}
+                onChange={handleSeek}
+                className={styles.progressBar}
+                onMouseDown={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${(currentTime / (duration || 1)) * 100}%, #333333 ${(currentTime / (duration || 1)) * 100}%, #333333 100%)`;
+                }}
+                onInput={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  const value = parseFloat(target.value);
+                  const percentage = (value / (duration || 1)) * 100;
+                  target.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${percentage}%, #333333 ${percentage}%, #333333 100%)`;
+                }}
+                onMouseUp={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  const value = parseFloat(target.value);
+                  const percentage = (value / (duration || 1)) * 100;
+                  target.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${percentage}%, #333333 ${percentage}%, #333333 100%)`;
+                }}
+              />
+            </div>
+
+            {/* Navigation Buttons */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              flexShrink: 0
             }}>
-              {formatTime(duration)}
-            </span>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={prevTrack}
+                disabled={currentTrackIndex === 0}
+                style={{
+                  padding: '4px',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: currentTrackIndex === 0 ? 0.3 : 1,
+                  color: currentTrackIndex === 0 ? '#666666' : '#ffffff'
+                }}
+              >
+                <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '16px', height: '16px' }}>
+                  <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
+                </svg>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={nextTrack}
+                disabled={currentTrackIndex === tracks.length - 1}
+                style={{
+                  padding: '4px',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: currentTrackIndex === tracks.length - 1 ? 0.3 : 1,
+                  color: currentTrackIndex === tracks.length - 1 ? '#666666' : '#ffffff'
+                }}
+              >
+                <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '16px', height: '16px' }}>
+                  <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z" />
+                </svg>
+              </motion.button>
+            </div>
           </div>
-        </div>
-
-        {/* Control Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '24px' }}>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={prevTrack}
-            disabled={currentTrackIndex === 0}
-            style={{
-              padding: '8px',
-              borderRadius: '50%',
-              background: '#f3f4f6',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: currentTrackIndex === 0 ? 0.5 : 1
-            }}
-          >
-            <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '20px', height: '20px', color: '#374151' }}>
-              <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
-            </svg>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={togglePlay}
-            style={{
-              padding: '16px',
-              borderRadius: '50%',
-              background: '#111827',
-              color: 'white',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            {isPlaying ? (
-              <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '24px', height: '24px' }}>
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            ) : (
-              <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '24px', height: '24px' }}>
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-              </svg>
-            )}
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={nextTrack}
-            disabled={currentTrackIndex === tracks.length - 1}
-            style={{
-              padding: '8px',
-              borderRadius: '50%',
-              background: '#f3f4f6',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: currentTrackIndex === tracks.length - 1 ? 0.5 : 1
-            }}
-          >
-            <svg fill="currentColor" viewBox="0 0 20 20" style={{ width: '20px', height: '20px', color: '#374151' }}>
-              <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z" />
-            </svg>
-          </motion.button>
         </div>
 
         {/* Playlist Toggle */}
@@ -483,18 +598,20 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
               alignItems: 'center',
               gap: '8px',
               padding: '8px 16px',
-              background: 'none',
-              border: 'none',
-              color: '#6b7280',
+              background: 'transparent',
+              border: '1px solid #333333',
+              color: '#cccccc',
               cursor: 'pointer',
               fontSize: '14px',
-              transition: 'color 0.2s ease'
+              borderRadius: '0',
+              transition: 'all 0.2s ease',
+              fontFamily: 'var(--font-evo2), system-ui, -apple-system, sans-serif'
             }}
           >
-            <span>{showPlaylist ? 'Hide' : 'Show'} Playlist</span>
+            <span>{showPlaylist ? 'Hide' : 'More'}</span>
             <motion.svg
               animate={{ rotate: showPlaylist ? 180 : 0 }}
-              style={{ width: '16px', height: '16px', transition: 'transform 0.2s ease' }}
+              style={{ width: '14px', height: '14px', transition: 'transform 0.2s ease' }}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -512,54 +629,70 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             style={{
-              borderTop: '1px solid #f3f4f6',
-              maxHeight: '256px',
-              overflowY: 'auto'
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.01)'
             }}
           >
             {tracks.map((track, index) => (
               <motion.div
                 key={track._id}
-                whileHover={{ backgroundColor: '#f9fafb' }}
+                whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
                 onClick={() => playTrack(index)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: '16px',
+                  padding: '12px 24px',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease',
-                  borderLeft: '4px solid transparent',
-                  backgroundColor: index === currentTrackIndex ? '#eff6ff' : 'transparent',
-                  borderLeftColor: index === currentTrackIndex ? '#3b82f6' : 'transparent'
+                  borderLeft: '3px solid transparent',
+                  backgroundColor: index === currentTrackIndex ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+                  borderLeftColor: index === currentTrackIndex ? '#ffffff' : 'transparent'
                 }}
               >
                 <div style={{
-                  width: '32px',
-                  height: '32px',
+                  width: '24px',
+                  height: '24px',
                   borderRadius: '50%',
-                  background: '#f3f4f6',
+                  background: index === currentTrackIndex ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.1)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontWeight: '500',
-                  color: '#6b7280'
+                  color: index === currentTrackIndex ? '#000000' : 'rgba(255, 255, 255, 0.6)',
+                  flexShrink: 0
                 }}>
                   {track.trackNumber}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{
-                    fontWeight: '500',
-                    margin: '0 0 4px 0',
-                    color: index === currentTrackIndex ? '#3b82f6' : '#111827'
-                  }}>
-                    {track.name}
-                  </p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {index === currentTrackIndex ? (
+                    <ScrollingTitle
+                      text={track.name}
+                      style={{
+                        fontWeight: '400',
+                        margin: '0 0 2px 0',
+                        color: '#ffffff',
+                        fontSize: '14px'
+                      }}
+                    />
+                  ) : (
+                    <p style={{
+                      fontWeight: '400',
+                      margin: '0 0 2px 0',
+                      color: '#cccccc',
+                      fontSize: '14px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {track.name}
+                    </p>
+                  )}
                   {track.durationSec && (
                     <p style={{
                       fontSize: '12px',
-                      color: '#6b7280',
+                      color: 'rgba(255, 255, 255, 0.5)',
                       margin: 0
                     }}>
                       {formatTime(track.durationSec)}
@@ -571,10 +704,11 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1, repeat: Infinity }}
                     style={{
-                      width: '8px',
-                      height: '8px',
-                      background: '#3b82f6',
-                      borderRadius: '50%'
+                      width: '6px',
+                      height: '6px',
+                      background: '#ffffff',
+                      borderRadius: '50%',
+                      flexShrink: 0
                     }}
                   />
                 )}

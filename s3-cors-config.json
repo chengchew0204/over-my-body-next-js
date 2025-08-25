@@ -1,0 +1,22 @@
+[
+  {
+    "AllowedHeaders": [
+      "*"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "HEAD"
+    ],
+    "AllowedOrigins": [
+      "https://over-my-body-next-4zr9jjp3r-zack-wus-projects-609ed125.vercel.app",
+      "https://over-my-body-next-js.vercel.app",
+      "http://localhost:3000"
+    ],
+    "ExposeHeaders": [
+      "Content-Length",
+      "Content-Range",
+      "Content-Type"
+    ],
+    "MaxAgeSeconds": 3000
+  }
+]

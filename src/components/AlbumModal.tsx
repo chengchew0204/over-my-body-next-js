@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { getSanityImageUrl } from '@/lib/image-utils';
+import { hasTracks, fetchAlbumWithTracks, type Track } from '@/lib/sanity-cms';
+import AlbumPlayer from './player/AlbumPlayer';
 
 interface Release {
   _id: string;
@@ -24,9 +26,9 @@ interface AlbumModalProps {
 }
 
 export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps) {
-  const [embedLoaded, setEmbedLoaded] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const embedRef = useRef<HTMLIFrameElement>(null);
+  const [hasTracksAvailable, setHasTracksAvailable] = useState(false);
+  const [isCheckingTracks, setIsCheckingTracks] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClose = useCallback(() => {
@@ -81,19 +83,27 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
     };
   }, [isOpen, handleClose]);
 
-  // Reset embed loaded state when release changes
+  // Check if album has tracks when release changes
   useEffect(() => {
-    setEmbedLoaded(false);
-  }, [release]);
+    if (release && isOpen) {
+      setIsCheckingTracks(true);
+      hasTracks(release.slug)
+        .then((hasTracks) => {
+          setHasTracksAvailable(hasTracks);
+        })
+        .catch((error) => {
+          console.error('Error checking tracks:', error);
+          setHasTracksAvailable(false);
+        })
+        .finally(() => {
+          setIsCheckingTracks(false);
+        });
+    } else {
+      setHasTracksAvailable(false);
+    }
+  }, [release, isOpen]);
 
   if (!isOpen || !release) return null;
-
-  const bandcampUrl = release.bandcampUrl || `https://overmybody.bandcamp.com/album/${release.slug}`;
-  const embedUrl = `${bandcampUrl}/size=large/bgcol=1a1a1a/linkcol=ffffff/tracklist=false/artwork=small/transparent=true/`;
-
-  const handleLoadEmbed = () => {
-    setEmbedLoaded(true);
-  };
 
       return (
       <div className={`album-modal-backdrop ${isClosing ? 'closing' : ''}`}>
@@ -131,6 +141,22 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
             </div>
           </div>
 
+          {/* Album Player - only show if tracks are available */}
+          {isCheckingTracks && (
+            <div className="album-player-section">
+              <h3>Listen</h3>
+              <div className="loading-tracks">
+                <p>Checking for available tracks...</p>
+              </div>
+            </div>
+          )}
+          {!isCheckingTracks && hasTracksAvailable && (
+            <div className="album-player-section">
+              <h3>Listen</h3>
+              <AlbumPlayer albumId={release.slug} />
+            </div>
+          )}
+
           {release.aboutHtml && (
             <div className="album-about">
               <h3>About</h3>
@@ -140,29 +166,6 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
               />
             </div>
           )}
-
-          <div className="album-embed-section">
-            <h3>Listen</h3>
-            {!embedLoaded && (
-              <div className="embed-placeholder">
-                <button 
-                  className="load-embed-btn"
-                  onClick={handleLoadEmbed}
-                >
-                  Load Bandcamp Player
-                </button>
-              </div>
-            )}
-            {embedLoaded && (
-              <iframe
-                ref={embedRef}
-                style={{ border: 0, width: '100%', height: '470px' }}
-                src={embedUrl}
-                seamless
-                title={`${release.name} - ${release.artist}`}
-              />
-            )}
-          </div>
         </div>
       </div>
 
@@ -332,38 +335,32 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           text-decoration-color: var(--text-white);
         }
 
-        .album-embed-section h3 {
+        .album-player-section {
+          margin-top: 2rem;
+          margin-bottom: 3rem;
+        }
+
+        .album-player-section h3 {
           font-size: 1.25rem;
           color: var(--text-white);
           margin: 0 0 1rem 0;
           font-weight: 700;
         }
 
-        .embed-placeholder {
+        .loading-tracks {
           display: flex;
           align-items: center;
           justify-content: center;
-          height: 470px;
+          height: 100px;
           background: rgba(255, 255, 255, 0.02);
           border: 1px dashed rgba(255, 255, 255, 0.1);
           border-radius: 4px;
         }
 
-        .load-embed-btn {
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          color: var(--text-white);
-          padding: 1rem 2rem;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 1rem;
-          transition: all 0.2s ease;
-        }
-
-        .load-embed-btn:hover {
-          background: rgba(255, 255, 255, 0.15);
-          border-color: rgba(255, 255, 255, 0.3);
-          transform: translateY(-1px);
+        .loading-tracks p {
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+          margin: 0;
         }
 
         @keyframes fadeIn {
@@ -439,10 +436,6 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           .album-artist {
             font-size: 1.1rem;
           }
-
-          .embed-placeholder {
-            height: 350px;
-          }
         }
 
         @media (max-width: 480px) {
@@ -466,10 +459,6 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           .album-cover-image {
             width: 200px !important;
             height: 200px !important;
-          }
-
-          .embed-placeholder {
-            height: 300px;
           }
         }
       `}</style>
