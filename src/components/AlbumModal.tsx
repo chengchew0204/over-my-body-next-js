@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { getSanityImageUrl } from '@/lib/image-utils';
-import { hasTracks, fetchAlbumWithTracks, type Track } from '@/lib/sanity-cms';
+import { hasTracks } from '@/lib/sanity-cms';
 import AlbumPlayer from './player/AlbumPlayer';
 
 interface Release {
@@ -142,14 +142,6 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           </div>
 
           {/* Album Player - only show if tracks are available */}
-          {isCheckingTracks && (
-            <div className="album-player-section">
-              <h3>Listen</h3>
-              <div className="loading-tracks">
-                <p>Checking for available tracks...</p>
-              </div>
-            </div>
-          )}
           {!isCheckingTracks && hasTracksAvailable && (
             <div className="album-player-section">
               <h3>Listen</h3>
@@ -347,21 +339,7 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           font-weight: 700;
         }
 
-        .loading-tracks {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100px;
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px dashed rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-        }
 
-        .loading-tracks p {
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          margin: 0;
-        }
 
         @keyframes fadeIn {
           from {
