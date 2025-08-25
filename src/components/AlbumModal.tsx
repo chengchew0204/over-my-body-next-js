@@ -29,6 +29,14 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
   const embedRef = useRef<HTMLIFrameElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 300); // Match animation duration
+  }, [onClose]);
+
   // Handle ESC key and corner visibility
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -54,7 +62,7 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
       document.body.style.overflow = 'unset';
       document.body.classList.remove('modal-open');
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   // Handle click outside modal
   useEffect(() => {
@@ -71,15 +79,7 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, onClose]);
-
-  const handleClose = useCallback(() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-      setIsClosing(false);
-    }, 300); // Match animation duration
-  }, [onClose]);
+  }, [isOpen, handleClose]);
 
   // Reset embed loaded state when release changes
   useEffect(() => {

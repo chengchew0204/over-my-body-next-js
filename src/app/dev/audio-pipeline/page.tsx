@@ -310,7 +310,7 @@ export default function AudioPipelinePage() {
           <div className="space-y-6">
             <h2 className="text-xl font-semibold">🎧 處理完成的音軌</h2>
             
-            {processedTracks.map((track, index) => (
+            {processedTracks.map((track, _index) => (
               <div key={track.trackId} className="border border-gray-300 rounded-lg p-1">
                 <div className="mb-3 p-3 bg-gray-50">
                   <h3 className="font-semibold">{track.title}</h3>

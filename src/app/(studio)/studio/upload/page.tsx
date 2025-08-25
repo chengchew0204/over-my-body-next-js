@@ -170,9 +170,9 @@ function UploadPageContent() {
             albumId: selectedRelease._id,
             trackNumber: uploadFile.trackNumber,
             durationSec: Math.round(duration),
-            streamUrl: result.files?.find((f: any) => f.fileName === 'index.m3u8')?.cloudFrontUrl || 
-                      result.files?.find((f: any) => f.fileName === 'index.m3u8')?.primaryUrl || 
-                      result.files?.find((f: any) => f.fileName === 'index.m3u8')?.url || '',
+            streamUrl: result.files?.find((f: { fileName: string; cloudFrontUrl?: string; primaryUrl?: string; url?: string }) => f.fileName === 'index.m3u8')?.cloudFrontUrl || 
+                      result.files?.find((f: { fileName: string; cloudFrontUrl?: string; primaryUrl?: string; url?: string }) => f.fileName === 'index.m3u8')?.primaryUrl || 
+                      result.files?.find((f: { fileName: string; cloudFrontUrl?: string; primaryUrl?: string; url?: string }) => f.fileName === 'index.m3u8')?.url || '',
             originalFileLink: result.originalFile?.cloudFrontUrl || result.originalFile?.url || '',
             externalTrackId: result.trackId,
             hlsKey: result.encryptionKey, // 保存 HLS 解密金鑰

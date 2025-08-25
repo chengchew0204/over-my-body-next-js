@@ -60,10 +60,10 @@ export default function AudioTestPage() {
         <div className="mt-8 p-4 bg-yellow-50 rounded-lg">
           <h3 className="font-semibold mb-2">Troubleshooting</h3>
           <div className="text-sm text-gray-700 space-y-1">
-            <p><strong>If you see "403 Forbidden" errors:</strong> CloudFront Signed Cookies are not properly configured</p>
-            <p><strong>If you see "404 Not Found" errors:</strong> HLS files are not accessible or paths are incorrect</p>
-            <p><strong>If you see "Key loading failed":</strong> The /api/hls/key endpoint is not working properly</p>
-            <p><strong>If audio doesn't play:</strong> Decryption may be failing or audio codec issues</p>
+            <p><strong>If you see &quot;403 Forbidden&quot; errors:</strong> CloudFront Signed Cookies are not properly configured</p>
+            <p><strong>If you see &quot;404 Not Found&quot; errors:</strong> HLS files are not accessible or paths are incorrect</p>
+            <p><strong>If you see &quot;Key loading failed&quot;:</strong> The /api/hls/key endpoint is not working properly</p>
+            <p><strong>If audio doesn&apos;t play:</strong> Decryption may be failing or audio codec issues</p>
           </div>
         </div>
       </div>

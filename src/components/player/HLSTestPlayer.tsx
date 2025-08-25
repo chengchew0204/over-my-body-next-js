@@ -93,7 +93,7 @@ export default function HLSTestPlayer({ src, title = 'HLS Test Player' }: HLSTes
       audio.addEventListener('canplay', () => addLog('Audio: Can play'));
       audio.addEventListener('playing', () => addLog('Audio: Playing'));
       audio.addEventListener('pause', () => addLog('Audio: Paused'));
-      audio.addEventListener('error', (e) => {
+      audio.addEventListener('error', (_e) => {
         addLog(`Audio error: ${audio.error?.message || 'Unknown error'}`);
         setError(`Audio error: ${audio.error?.message || 'Unknown error'}`);
       });
