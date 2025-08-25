@@ -58,6 +58,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const bytes = hexToBytes(hex);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new Response(bytes as any, {
       status: 200,
       headers: {
