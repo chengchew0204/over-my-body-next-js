@@ -340,11 +340,11 @@ body:not(.bg-home) .main-visual {
 
   .corner--bl {
     bottom: calc(env(safe-area-inset-bottom) + var(--bl-y));
-    left: 50%;
-    transform: translateX(-50%) scale(0.7);
+    left: calc(env(safe-area-inset-left) + var(--bl-x));
+    transform: scale(0.7);
     width: auto;
     height: auto;
-    transform-origin: center bottom;
+    transform-origin: bottom left;
   }
 
   .corner-nav {
