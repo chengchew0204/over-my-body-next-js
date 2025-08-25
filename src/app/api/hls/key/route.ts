@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const bytes = hexToBytes(hex);
-    return new NextResponse(bytes, {
+    return new Response(bytes, {
       status: 200,
       headers: {
         "Content-Type": "application/octet-stream",
