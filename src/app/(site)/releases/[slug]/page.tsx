@@ -1,11 +1,29 @@
-import { redirect } from 'next/navigation';
 import { sanity } from '@/lib/sanity';
 import { groq } from 'next-sanity';
+import Image from 'next/image';
+import { getSanityImageUrl } from '@/lib/image-utils';
 
 type Release = {
   _id: string;
   name: string;
   slug: string;
+  artist: string;
+  bandcampUrl?: string;
+  cover?: object;
+  coverUrl?: string;
+  externalId?: string;
+  releaseDate?: string;
+  type?: string;
+  aboutHtml?: string;
+};
+
+type Track = {
+  _id: string;
+  name: string;
+  durationSec?: number;
+  externalTrackId?: string;
+  streamUrl?: string;
+  trackNumber?: number;
 };
 
 type SlugParams = {
@@ -13,7 +31,12 @@ type SlugParams = {
 };
 
 const RELEASE = groq`*[_type=="release" && slug.current==$slug][0]{
-  _id, name, "slug": slug.current
+  _id, name, "slug": slug.current, artist, bandcampUrl,
+  cover, "coverUrl": cover.asset->url, externalId, releaseDate, type, aboutHtml
+}`;
+
+const TRACKS = groq`*[_type=="track" && album->slug.current==$slug]|order(trackNumber asc){
+  _id, name, durationSec, externalTrackId, streamUrl, trackNumber
 }`;
 
 export async function generateStaticParams() {
@@ -25,12 +48,46 @@ export const revalidate = 60;
 
 export default async function ReleaseDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const release = await sanity.fetch<Release | null>(RELEASE, { slug }, { next: { tags: ['releases'] } });
+  const [release, tracks] = await Promise.all([
+    sanity.fetch<Release | null>(RELEASE, { slug }, { next: { tags: ['releases'] } }),
+    sanity.fetch<Track[]>(TRACKS, { slug }, { next: { tags: ['tracks'] } }),
+  ]);
 
-  if (!release) {
-    redirect('/releases');
-  }
+  if (!release) return null;
 
-  // Redirect to releases page with album parameter
-  redirect(`/releases?album=${slug}`);
+  return (
+    <main>
+      <header>
+        {release.coverUrl && (
+          <Image
+            src={getSanityImageUrl(release.coverUrl, 'large', 98)}
+            alt={release.name}
+            width={1000}
+            height={1000}
+          />
+        )}
+        <h1>{release.name}</h1>
+        <p>{release.artist}</p>
+        {release.bandcampUrl && (
+          <p><a href={release.bandcampUrl} target="_blank" rel="noreferrer">Listen on Bandcamp</a></p>
+        )}
+      </header>
+
+      {release.aboutHtml && (
+        <section dangerouslySetInnerHTML={{ __html: release.aboutHtml }} />
+      )}
+
+      <section>
+        <h2>Tracks</h2>
+        <ol>
+          {tracks?.map((t: Track) => (
+            <li key={t._id}>
+              {t.trackNumber ? `${t.trackNumber}. ` : ''}{t.name}
+              {t.durationSec ? ` — ${Math.floor(t.durationSec / 60)}:${String(t.durationSec % 60).padStart(2, '0')}` : ''}
+            </li>
+          ))}
+        </ol>
+      </section>
+    </main>
+  );
 }

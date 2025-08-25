@@ -17,5 +17,7 @@ export default defineType({
     defineField({ name: 'externalTrackId', title: 'External Track ID', type: 'string' }),
     defineField({ name: 'streamUrl', title: 'Stream URL', type: 'url' }),
     defineField({ name: 'trackNumber', title: 'Track Number', type: 'number' }),
+    defineField({ name: 'originalFileLink', title: 'Original File Link', type: 'url' }),
+    defineField({ name: 'hlsKey', title: 'HLS Decryption Key', type: 'string' }),
   ],
 });

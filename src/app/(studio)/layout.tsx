@@ -1,6 +1,8 @@
-// Minimal Studio root: no site chrome, no globals.css import.
+import { Inter } from 'next/font/google';
+import StudioNavigation from '@/components/StudioNavigation';
+import './studio-fix.css';
 
-import StudioBodyManager from '@/components/StudioBodyManager';
+const inter = Inter({ subsets: ['latin'] });
 
 export default function StudioLayout({
   children,
@@ -8,28 +10,11 @@ export default function StudioLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          body.studio {
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            background: #fff !important;
-            overflow: hidden !important;
-          }
-          html {
-            height: 100% !important;
-          }
-          body.studio > div {
-            height: 100vh !important;
-          }
-        `
-      }} />
-      <StudioBodyManager />
-      <div style={{ height: '100vh', width: '100vw' }}>
+    <div className={inter.className} style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <StudioNavigation />
+      <div style={{ flex: 1, overflow: 'auto' }}>
         {children}
       </div>
-    </>
+    </div>
   );
 }

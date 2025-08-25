@@ -200,6 +200,7 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           animation: slideIn 0.3s ease;
           display: flex;
           flex-direction: column;
+          font-family: var(--font-evo2), system-ui, -apple-system, sans-serif;
         }
 
         .album-modal.closing {
@@ -238,6 +239,7 @@ export default function AlbumModal({ release, isOpen, onClose }: AlbumModalProps
           scrollbar-width: thin;
           scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
           min-height: 0;
+          font-family: var(--font-evo2), system-ui, -apple-system, sans-serif;
         }
 
         .album-modal-content::-webkit-scrollbar {

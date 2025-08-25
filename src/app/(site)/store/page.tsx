@@ -16,7 +16,7 @@ export default async function StorePage() {
   return (
     <>
       <h1>STORE</h1>
-      <p className="lead">Physical releases and merchandise from OVER MY BODY.</p>
+      <p className="">Physical releases and merchandise from OVER MY BODY.</p>
       <StoreGrid products={products} />
     </>
   );

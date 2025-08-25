@@ -39,7 +39,7 @@ export default async function ReleasesPage() {
   return (
     <>
       <h1>RELEASE</h1>
-      <p className="lead">Discover our catalog of avant-garde sounds and experimental compositions from emerging and established artists.</p>
+      <p className="">Discover our catalog of avant-garde sounds and experimental compositions from emerging and established artists.</p>
       <Suspense fallback={<div>Loading...</div>}>
         <ReleasesClient releases={releases} />
       </Suspense>

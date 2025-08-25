@@ -1,0 +1,9 @@
+/* Studio Layout Fix - 確保 Sanity Studio 頁面正常顯示 */
+
+/* 讓 Studio 頁面有完整的高度 */
+html,
+body {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow: auto !important;
+}
