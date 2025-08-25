@@ -7,7 +7,7 @@
 /* Minimal reset */
 *,*::before,*::after { box-sizing: border-box; }
 html, body { height: 100%; }
-body { margin: 0; color: #EBEBEB; background: #1A1A1A; font-family: var(--font-evo2), system-ui, -apple-system, "PingFang TC","Noto Sans TC", sans-serif; line-height: 1.5; }
+body { margin: 0; color: #EBEBEB; background: #000000; font-family: var(--font-evo2), system-ui, -apple-system, "PingFang TC","Noto Sans TC", sans-serif; line-height: 1.5; }
 img, video { max-width: 100%; display: block; }
 
 /* Design tokens from Figma */
