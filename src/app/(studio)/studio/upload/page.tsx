@@ -220,11 +220,11 @@ function UploadPageContent() {
 
   const getStatusText = (status: UploadFile['status']) => {
     switch (status) {
-      case 'pending': return '待處理';
-      case 'uploading': return '上傳中';
-      case 'processing': return '處理中';
-      case 'completed': return '完成';
-      case 'error': return '錯誤';
+      case 'pending': return 'Pending';
+      case 'uploading': return 'Uploading';
+      case 'processing': return 'Processing';
+      case 'completed': return 'Completed';
+      case 'error': return 'Error';
       default: return '';
     }
   };
@@ -246,14 +246,14 @@ function UploadPageContent() {
         <div className={styles.card}>
           {/* Header */}
           <div className={styles.header}>
-            <h1 className={styles.title}>專輯曲目上傳</h1>
-            <p className={styles.subtitle}>批次上傳音檔並自動處理為 HLS 串流格式</p>
+            <h1 className={styles.title}>Album Track Upload</h1>
+            <p className={styles.subtitle}>Batch upload audio files and automatically process to HLS streaming format</p>
           </div>
 
           {/* Release Selection */}
           <div className={styles.section}>
             <label className={styles.label}>
-              選擇專輯
+              Select Album
             </label>
             <select
               value={selectedRelease?._id || ''}
@@ -263,7 +263,7 @@ function UploadPageContent() {
               }}
               className={styles.select}
             >
-              <option value="">請選擇專輯...</option>
+              <option value="">Please select an album...</option>
               {releases.map((release) => (
                 <option key={release._id} value={release._id}>
                   {release.artist} - {release.name} ({release.type})
@@ -296,12 +296,12 @@ function UploadPageContent() {
               </svg>
               <div className={styles.uploadText}>
                 <span className={styles.uploadTextPrimary}>
-                  點擊上傳檔案
+                  Click to upload files
                 </span>
-                <span className={styles.uploadTextSecondary}> 或拖拽檔案到此處</span>
+                <span className={styles.uploadTextSecondary}> or drag files here</span>
               </div>
               <p className={styles.uploadHint}>
-                支援 WAV、MP3 等音頻格式
+                Supports WAV, MP3 and other audio formats
               </p>
               <input
                 id="file-upload"
@@ -319,14 +319,14 @@ function UploadPageContent() {
             <div className={styles.fileListSection}>
               <div className={styles.fileListHeader}>
                 <h3 className={styles.fileListTitle}>
-                  曲目列表 ({uploadFiles.length})
+                  Track List ({uploadFiles.length})
                 </h3>
                 <button
                   onClick={uploadAll}
                   disabled={!selectedRelease || isLoading || uploadFiles.every(f => f.status !== 'pending')}
                   className={styles.uploadButton}
                 >
-                  {isLoading ? '處理中...' : '開始上傳'}
+                  {isLoading ? 'Processing...' : 'Start Upload'}
                 </button>
               </div>
 
@@ -348,7 +348,7 @@ function UploadPageContent() {
                             value={file.name}
                             onChange={(e) => updateFileInfo(file.id, { name: e.target.value })}
                             className={styles.trackName}
-                            placeholder="曲名"
+                            placeholder="Track name"
                           />
                           <span className={`${styles.status} ${getStatusClass(file.status)}`}>
                             {getStatusText(file.status)}

@@ -149,25 +149,25 @@ export default function AudioPipelinePage() {
         
         {/* Process Flow Info */}
         <div className="mb-8 p-4 bg-blue-50 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">處理流程</h2>
+          <h2 className="text-lg font-semibold mb-2">Processing Flow</h2>
           <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
-            <li>上傳 WAV 音檔</li>
-            <li>FFmpeg 轉換為 HLS 格式 (.m3u8 + .ts 切片)</li>
-            <li>AES-128 加密音頻切片</li>
-            <li>上傳到 S3</li>
-            <li>動態註冊解密金鑰</li>
-            <li>選擇播放模式 (代理端點/S3/CloudFront)</li>
-            <li>測試雲端串流播放</li>
+            <li>Upload WAV audio file</li>
+            <li>FFmpeg converts to HLS format (.m3u8 + .ts segments)</li>
+            <li>AES-128 encrypts audio segments</li>
+            <li>Upload to S3</li>
+            <li>Dynamically register decryption keys</li>
+            <li>Select playback mode (Proxy endpoint/S3/CloudFront)</li>
+            <li>Test cloud streaming playback</li>
           </ol>
         </div>
 
         {/* Audio Processing Section */}
         <div className="bg-gray-50 p-6 rounded-lg mb-8">
-          <h2 className="text-xl font-semibold mb-4">🎤 音檔處理</h2>
+          <h2 className="text-xl font-semibold mb-4">🎤 Audio Processing</h2>
           
           {/* File Selection */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">選擇音檔 (WAV, MP3, AAC)：</label>
+            <label className="block text-sm font-medium mb-2">Select audio file (WAV, MP3, AAC):</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -178,40 +178,40 @@ export default function AudioPipelinePage() {
             />
             {selectedFile && (
               <div className="mt-2 text-sm text-gray-600">
-                已選擇: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
               </div>
             )}
           </div>
 
           {/* Track Title */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">音軌標題：</label>
+            <label className="block text-sm font-medium mb-2">Track title:</label>
             <input
               type="text"
               value={trackTitle}
               onChange={(e) => setTrackTitle(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="例如: Moon Beam"
+              placeholder="e.g. Moon Beam"
               disabled={processingStatus === 'processing'}
             />
           </div>
 
           {/* Album Path */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">專輯路徑：</label>
+            <label className="block text-sm font-medium mb-2">Album path:</label>
             <input
               type="text"
               value={albumPath}
               onChange={(e) => setAlbumPath(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="例如: moon-beam-omb007"
+              placeholder="e.g. moon-beam-omb007"
               disabled={processingStatus === 'processing'}
             />
           </div>
 
           {/* Playback Mode Selection */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">播放模式：</label>
+            <label className="block text-sm font-medium mb-2">Playback mode:</label>
             <div className="flex space-x-4">
               <label className="flex items-center">
                 <input
@@ -222,7 +222,7 @@ export default function AudioPipelinePage() {
                   className="mr-2"
                   disabled={processingStatus === 'processing'}
                 />
-                <span className="text-sm">代理端點 (推薦測試)</span>
+                <span className="text-sm">Proxy endpoint (Recommended for testing)</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -233,7 +233,7 @@ export default function AudioPipelinePage() {
                   className="mr-2"
                   disabled={processingStatus === 'processing'}
                 />
-                <span className="text-sm">S3 直接播放</span>
+                <span className="text-sm">S3 direct playback</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -267,7 +267,7 @@ export default function AudioPipelinePage() {
                   : 'bg-gray-400 cursor-not-allowed'
               }`}
             >
-              {processingStatus === 'processing' ? '處理中...' : '開始處理'}
+              {processingStatus === 'processing' ? 'Processing...' : 'Start Processing'}
             </button>
             
             <button
@@ -275,7 +275,7 @@ export default function AudioPipelinePage() {
               disabled={processingStatus === 'processing'}
               className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md font-medium"
             >
-              清除全部
+              Clear All
             </button>
           </div>
         </div>
@@ -288,14 +288,14 @@ export default function AudioPipelinePage() {
             <h3 className={`font-semibold mb-2 ${
               processingResult.success ? 'text-green-800' : 'text-red-800'
             }`}>
-              {processingResult.success ? '✅ 處理成功' : '❌ 處理失敗'}
+              {processingResult.success ? '✅ Processing Successful' : '❌ Processing Failed'}
             </h3>
             
             {processingResult.success && (
               <div className="text-sm text-green-700 space-y-1">
-                <p><strong>音軌 ID:</strong> {processingResult.trackId}</p>
-                <p><strong>加密金鑰:</strong> <code className="bg-green-100 px-1 rounded">{processingResult.encryptionKey}</code></p>
-                <p><strong>上傳檔案:</strong> {processingResult.files?.length || 0} 個</p>
+                <p><strong>Track ID:</strong> {processingResult.trackId}</p>
+                <p><strong>Encryption Key:</strong> <code className="bg-green-100 px-1 rounded">{processingResult.encryptionKey}</code></p>
+                <p><strong>Uploaded Files:</strong> {processingResult.files?.length || 0} files</p>
               </div>
             )}
             
@@ -308,7 +308,7 @@ export default function AudioPipelinePage() {
         {/* Processed Tracks */}
         {processedTracks.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold">🎧 處理完成的音軌</h2>
+            <h2 className="text-xl font-semibold">🎧 Processed Tracks</h2>
             
             {processedTracks.map((track, _index) => (
               <div key={track.trackId} className="border border-gray-300 rounded-lg p-1">

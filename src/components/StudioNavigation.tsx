@@ -23,7 +23,7 @@ export default function StudioNavigation() {
                     : styles.linkInactive
                 }`}
               >
-                內容管理
+                Content Management
               </Link>
               
               <Link
@@ -34,7 +34,7 @@ export default function StudioNavigation() {
                     : styles.linkInactive
                 }`}
               >
-                曲目上傳
+                Track Upload
               </Link>
             </div>
           </div>
@@ -44,7 +44,7 @@ export default function StudioNavigation() {
               href="/"
               className={styles.actionLink}
             >
-              回到網站
+              Back to Site
             </Link>
           </div>
         </div>

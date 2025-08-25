@@ -290,12 +290,36 @@ export default function AlbumPlayer({ albumId, className = '' }: AlbumPlayerProp
   const nextTrack = () => {
     if (currentTrackIndex < tracks.length - 1) {
       setCurrentTrackIndex(prev => prev + 1);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      
+      // Auto-play the next track after a short delay to allow state updates
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play().catch((error) => {
+            console.log('Auto-play failed:', error);
+            // Auto-play might be blocked by browser, but that's okay
+          });
+        }
+      }, 100);
     }
   };
 
   const prevTrack = () => {
     if (currentTrackIndex > 0) {
       setCurrentTrackIndex(prev => prev - 1);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      
+      // Auto-play the previous track after a short delay to allow state updates
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play().catch((error) => {
+            console.log('Auto-play failed:', error);
+            // Auto-play might be blocked by browser, but that's okay
+          });
+        }
+      }, 100);
     }
   };
 

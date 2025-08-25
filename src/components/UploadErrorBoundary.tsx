@@ -46,16 +46,16 @@ export default class UploadErrorBoundary extends React.Component<Props, State> {
               </svg>
             </div>
             <h2 className={styles.title}>
-              上傳功能暫時無法使用
+              Upload feature temporarily unavailable
             </h2>
             <p className={styles.message}>
-              {this.state.error?.message || '發生未知錯誤，請稍後再試'}
+              {this.state.error?.message || 'An unknown error occurred, please try again later'}
             </p>
             <button
               onClick={() => this.setState({ hasError: false })}
               className={styles.retryButton}
             >
-              重新嘗試
+              Try Again
             </button>
           </div>
         </div>
